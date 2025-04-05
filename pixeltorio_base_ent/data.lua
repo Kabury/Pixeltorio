@@ -66,8 +66,8 @@ function helper(arg)
         if y == 11 then ycord = ycord - 4 end
         if char == " " then char = "≞" end
         if b == " " then b = "≞" end
-        layerstable[i*2-1] =   {filename = "__asciigfx__/graphics/tileset/" .. b .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
-        layerstable[i*2] = {filename = "__asciigfx__/graphics/tileset/" .. char .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
+        layerstable[i*2-1] =   {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. b .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
+        layerstable[i*2] = {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. char .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
         i=i+1
     end
     return layerstable
@@ -82,7 +82,7 @@ data.raw["character"]["character"].animations={
             layers=helper{chars="@,⦯",x=1,y=2,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}},offy=-1}
         },
         running_with_gun={
-            filename="__asciigfx__/graphics/tileset/character.png",width=resolution*1,height=resolution*2,scale=32/resolution,line_length=18,frame_count=1,shift={0,-1},direction_count=18
+            filename="__pixeltorio_base_ent__/graphics/tileset/character.png",width=resolution*1,height=resolution*2,scale=32/resolution,line_length=18,frame_count=1,shift={0,-1},direction_count=18
         }
     }   
 }
@@ -316,23 +316,23 @@ data.raw["solar-panel"]["solar-panel"].picture={
 data.raw["corpse"]["solar-panel-remnants"].animation={layers=helper{chars="∅,∅,∅,∅,☀,∅,∅,∅,∅",ftint={{r=1,g=0.3,b=0.5}}}}
 
 
-data.raw["resource"]["coal"].stages.sheet={filename="__asciigfx__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=0.5,g=0.5,b=0.5}}
+data.raw["resource"]["coal"].stages.sheet={filename="__pixeltorio_base_ent__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=0.5,g=0.5,b=0.5}}
 data.raw["resource"]["coal"].stage_counts={3000,1000,500}
 data.raw["resource"]["coal"].randomize_visual_position=false
 
-data.raw["resource"]["copper-ore"].stages.sheet={filename="__asciigfx__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=1,g=0.63,b=0.3}}
+data.raw["resource"]["copper-ore"].stages.sheet={filename="__pixeltorio_base_ent__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=1,g=0.63,b=0.3}}
 data.raw["resource"]["copper-ore"].stage_counts={3000,1000,500}
 data.raw["resource"]["copper-ore"].randomize_visual_position=false
 
-data.raw["resource"]["iron-ore"].stages.sheet={filename="__asciigfx__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=0.5,g=0.63,b=1}}
+data.raw["resource"]["iron-ore"].stages.sheet={filename="__pixeltorio_base_ent__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=0.5,g=0.63,b=1}}
 data.raw["resource"]["iron-ore"].stage_counts={3000,1000,500}
 data.raw["resource"]["iron-ore"].randomize_visual_position=false
 
-data.raw["resource"]["stone"].stages.sheet={filename="__asciigfx__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=0.87,g=0.87,b=0.63}}
+data.raw["resource"]["stone"].stages.sheet={filename="__pixeltorio_base_ent__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=0.87,g=0.87,b=0.63}}
 data.raw["resource"]["stone"].stage_counts={3000,1000,500}
 data.raw["resource"]["stone"].randomize_visual_position=false
 
-data.raw["resource"]["uranium-ore"].stages.sheet={filename="__asciigfx__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=0.5,g=1,b=0.5}}
+data.raw["resource"]["uranium-ore"].stages.sheet={filename="__pixeltorio_base_ent__/graphics/tileset/resource.png",width=resolution,height=resolution,scale=32/resolution,variation_count=3,tint={r=0.5,g=1,b=0.5}}
 data.raw["resource"]["uranium-ore"].stage_counts={3000,1000,500}
 data.raw["resource"]["uranium-ore"].randomize_visual_position=false
 data.raw["resource"]["uranium-ore"].stages_effect=nil
@@ -558,7 +558,7 @@ data.raw["corpse"]["behemoth-worm-corpse-burrowed"].ground_patch_decay=nil
 
 for i,deconame in pairs(data.raw["optimized-decorative"]) do
     for j,decopic in ipairs(deconame.pictures) do
-        decopic.filename="__asciigfx__/graphics/tileset/bigdummy.png"
+        decopic.filename="__pixeltorio_base_ent__/graphics/tileset/bigdummy.png"
     end
 end
 
@@ -1172,7 +1172,7 @@ data.raw["explosion"]["atomic-nuke-shockwave"].animations={layers={helper{chars=
 
 data.raw["transport-belt"]["transport-belt"].belt_animation_set={
     animation_set={
-        filename="__asciigfx__/graphics/tileset/belt.png",width=resolution,height=resolution,scale=32/resolution,direction_count=13,tint={r=1,g=1,b=0.25}
+        filename="__pixeltorio_base_ent__/graphics/tileset/belt.png",width=resolution,height=resolution,scale=32/resolution,direction_count=13,tint={r=1,g=1,b=0.25}
     },
     north_index=1,
     south_index=2,
@@ -1199,7 +1199,7 @@ data.raw["corpse"]["transport-belt-remnants"].animation={layers=helper{chars="�
 
 data.raw["transport-belt"]["fast-transport-belt"].belt_animation_set={
     animation_set={
-        filename="__asciigfx__/graphics/tileset/belt.png",width=resolution,height=resolution,scale=32/resolution,direction_count=13,tint={r=1,g=0.25,b=0.25}
+        filename="__pixeltorio_base_ent__/graphics/tileset/belt.png",width=resolution,height=resolution,scale=32/resolution,direction_count=13,tint={r=1,g=0.25,b=0.25}
     },
     north_index=1,
     south_index=2,
@@ -1226,7 +1226,7 @@ data.raw["corpse"]["fast-transport-belt-remnants"].animation={layers=helper{char
 
 data.raw["transport-belt"]["express-transport-belt"].belt_animation_set={
     animation_set={
-        filename="__asciigfx__/graphics/tileset/belt.png",width=resolution,height=resolution,scale=32/resolution,direction_count=13,tint={r=0.25,g=0.25,b=1}
+        filename="__pixeltorio_base_ent__/graphics/tileset/belt.png",width=resolution,height=resolution,scale=32/resolution,direction_count=13,tint={r=0.25,g=0.25,b=1}
     },
     north_index=1,
     south_index=2,
@@ -1788,7 +1788,7 @@ data.raw["corpse"]["train-stop-remnants"].animation={layers=helper{chars="⛔,�
 data.raw["corpse"]["train-stop-remnants"].animation_overlay=nil
 
 
-data.raw["rail-signal"]["rail-signal"].ground_picture_set.structure={filename= "__asciigfx__/graphics/tileset/" .. "🚦1" .. ".png",width=resolution,height=resolution,scale=32/resolution,frame_count=4,tint={r=0.75,g=0.75,b=0.75}}
+data.raw["rail-signal"]["rail-signal"].ground_picture_set.structure={filename= "__pixeltorio_base_ent__/graphics/tileset/" .. "🚦1" .. ".png",width=resolution,height=resolution,scale=32/resolution,frame_count=4,tint={r=0.75,g=0.75,b=0.75}}
 data.raw["rail-signal"]["rail-signal"].ground_picture_set.lights={
     red={light={intensity=1,size=3,color={r=1,g=0.5,b=0.5}}},
     green={light={intensity=1,size=3,color={r=0.5,g=1,b=0.5}}},
@@ -1818,7 +1818,7 @@ data.raw["corpse"]["rail-signal-remnants"].animation={layers=helper{chars="🚦"
 
 
 
-data.raw["rail-chain-signal"]["rail-chain-signal"].ground_picture_set.structure={filename= "__asciigfx__/graphics/tileset/" .. "⏱1" .. ".png",width=resolution,height=resolution,scale=32/resolution,frame_count=4,tint={r=0.75,g=0.75,b=0.75}}
+data.raw["rail-chain-signal"]["rail-chain-signal"].ground_picture_set.structure={filename= "__pixeltorio_base_ent__/graphics/tileset/" .. "⏱1" .. ".png",width=resolution,height=resolution,scale=32/resolution,frame_count=4,tint={r=0.75,g=0.75,b=0.75}}
 data.raw["rail-chain-signal"]["rail-chain-signal"].ground_picture_set.lights={
     red={light={intensity=1,size=3,color={r=1,g=0.5,b=0.5}}},
     green={light={intensity=1,size=3,color={r=0.5,g=1,b=0.5}}},
@@ -1860,14 +1860,14 @@ data.raw["tile"]["water"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
 data.raw["tile"]["water"].tint={r=0.5,g=0.5,b=1}
@@ -1879,14 +1879,14 @@ data.raw["tile"]["deepwater"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
 data.raw["tile"]["deepwater"].tint={r=0.3,g=0.3,b=1,a=1}
@@ -1898,14 +1898,14 @@ data.raw["tile"]["water-green"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
 data.raw["tile"]["water-green"].tint={r=0.5,g=1,b=1,a=1}
@@ -1918,14 +1918,14 @@ data.raw["tile"]["deepwater-green"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
 data.raw["tile"]["deepwater-green"].tint={r=0.3,g=1,b=1,a=1}
@@ -1938,14 +1938,14 @@ data.raw["tile"]["water-shallow"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
 data.raw["tile"]["water-shallow"].tint={r=0.75,g=0.75,b=1,a=1}
@@ -1957,14 +1957,14 @@ data.raw["tile"]["water-mud"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
 data.raw["tile"]["water-mud"].tint={r=0.5,g=0.6,b=0.8}
@@ -1980,14 +1980,14 @@ for dirtname,dirttable in pairs(data.raw["tile"]) do
                 {
                 size=1,
                 count=1,
-                picture="__asciigfx__/graphics/tileset/" .. "background" .. ".png"
+                picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
                 }
             },
             material_texture_width_in_tiles=1,
             material_texture_height_in_tiles=1,
             material_background={
                 count=1,
-                picture="__asciigfx__/graphics/tileset/" .. "background" .. ".png"
+                picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
             }
         }
         dirttable.effect = nil
@@ -2007,14 +2007,14 @@ for grassname,grasstable in pairs(data.raw["tile"]) do
                 {
                 size=1,
                 count=1,
-                picture="__asciigfx__/graphics/tileset/" .. "background" .. ".png"
+                picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
                 }
             },
             material_texture_width_in_tiles=1,
             material_texture_height_in_tiles=1,
             material_background={
                 count=1,
-                picture="__asciigfx__/graphics/tileset/" .. "background" .. ".png"
+                picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
             }
         }
         grasstable.effect = nil
@@ -2033,14 +2033,14 @@ for desertname,deserttable in pairs(data.raw["tile"]) do
                 {
                 size=1,
                 count=1,
-                picture="__asciigfx__/graphics/tileset/" .. "background" .. ".png"
+                picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
                 }
             },
             material_texture_width_in_tiles=1,
             material_texture_height_in_tiles=1,
             material_background={
                 count=1,
-                picture="__asciigfx__/graphics/tileset/" .. "background" .. ".png"
+                picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
             }
         }
         deserttable.effect = nil
@@ -2060,14 +2060,14 @@ for sandname,sandtable in pairs(data.raw["tile"]) do
                 {
                 size=1,
                 count=1,
-                picture="__asciigfx__/graphics/tileset/" .. "background" .. ".png"
+                picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
                 }
             },
             material_texture_width_in_tiles=1,
             material_texture_height_in_tiles=1,
             material_background={
                 count=1,
-                picture="__asciigfx__/graphics/tileset/" .. "background" .. ".png"
+                picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
             }
         }
         sandtable.effect = nil
@@ -2085,14 +2085,14 @@ data.raw["tile"]["water-shallow"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "≈" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
 data.raw["tile"]["water-shallow"].tint={r=0.75,g=0.75,b=1,a=1}
@@ -2104,14 +2104,14 @@ data.raw["tile"]["water-wube"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "wubewater" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "wubewater" .. ".png"
         }
     },
     material_texture_width_in_tiles=3,
     material_texture_height_in_tiles=3,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "wubewater" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "wubewater" .. ".png"
     }
 }
 data.raw["tile"]["water-wube"].tint=nil
@@ -2124,14 +2124,14 @@ data.raw["tile"]["stone-path"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "⡪" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "⡪" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "⡪" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "⡪" .. ".png"
     }
 }
 data.raw["tile"]["stone-path"].tint={r=0.87,g=0.87,b=0.63}
@@ -2144,14 +2144,14 @@ data.raw["tile"]["landfill"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▦" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▦" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▦" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▦" .. ".png"
     }
 }
 data.raw["tile"]["landfill"].tint={r=0.2,g=0.2,b=0}
@@ -2164,14 +2164,14 @@ data.raw["tile"]["concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "⊡" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "⊡" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "⊡" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "⊡" .. ".png"
     }
 }
 data.raw["tile"]["concrete"].tint={r=0.2,g=0.2,b=0.2}
@@ -2184,14 +2184,14 @@ data.raw["tile"]["hazard-concrete-right"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▨" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▨" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▨" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▨" .. ".png"
     }
 }
 data.raw["tile"]["hazard-concrete-right"].tint={r=0.4,g=0.4,b=0.1}
@@ -2204,14 +2204,14 @@ data.raw["tile"]["hazard-concrete-left"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▧" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▧" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▧" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▧" .. ".png"
     }
 }
 data.raw["tile"]["hazard-concrete-left"].tint={r=0.4,g=0.4,b=0.1}
@@ -2224,14 +2224,14 @@ data.raw["tile"]["refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["refined-concrete"].tint={r=0.2,g=0.2,b=0.2}
@@ -2244,14 +2244,14 @@ data.raw["tile"]["refined-hazard-concrete-right"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▨" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▨" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▨" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▨" .. ".png"
     }
 }
 data.raw["tile"]["refined-hazard-concrete-right"].tint={r=0.4,g=0.4,b=0.1}
@@ -2264,14 +2264,14 @@ data.raw["tile"]["refined-hazard-concrete-left"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▧" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▧" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▧" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▧" .. ".png"
     }
 }
 data.raw["tile"]["refined-hazard-concrete-left"].tint={r=0.4,g=0.4,b=0.1}
@@ -2284,14 +2284,14 @@ data.raw["tile"]["red-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["red-refined-concrete"].tint={r=0.4,g=0.2,b=0.2}
@@ -2303,14 +2303,14 @@ data.raw["tile"]["orange-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["orange-refined-concrete"].tint={r=0.4,g=0.3,b=0.2}
@@ -2323,14 +2323,14 @@ data.raw["tile"]["yellow-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["yellow-refined-concrete"].tint={r=0.4,g=0.4,b=0.2}
@@ -2343,14 +2343,14 @@ data.raw["tile"]["acid-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["acid-refined-concrete"].tint={r=0.3,g=0.4,b=0.2}
@@ -2363,14 +2363,14 @@ data.raw["tile"]["green-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["green-refined-concrete"].tint={r=0.2,g=0.4,b=0.2}
@@ -2384,14 +2384,14 @@ data.raw["tile"]["cyan-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["cyan-refined-concrete"].tint={r=0.2,g=0.4,b=0.4}
@@ -2404,14 +2404,14 @@ data.raw["tile"]["blue-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["blue-refined-concrete"].tint={r=0.2,g=0.2,b=0.4}
@@ -2424,14 +2424,14 @@ data.raw["tile"]["purple-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["purple-refined-concrete"].tint={r=0.3,g=0.2,b=0.4}
@@ -2444,14 +2444,14 @@ data.raw["tile"]["pink-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["pink-refined-concrete"].tint={r=0.4,g=0.2,b=0.3}
@@ -2464,14 +2464,14 @@ data.raw["tile"]["black-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["black-refined-concrete"].tint={r=0.75,g=0.75,b=0.75}
@@ -2484,14 +2484,14 @@ data.raw["tile"]["brown-refined-concrete"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "▣" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "▣" .. ".png"
     }
 }
 data.raw["tile"]["brown-refined-concrete"].tint={r=0.3,g=0.2,b=0.2}
@@ -2504,14 +2504,14 @@ data.raw["tile"]["nuclear-ground"].variants={
         {
         size=1,
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "☠" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "☠" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__asciigfx__/graphics/tileset/" .. "☠" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "☠" .. ".png"
     }
 }
 data.raw["tile"]["nuclear-ground"].tint={r=0.2,g=0.6,b=0.2}
