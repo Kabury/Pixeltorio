@@ -1,0 +1,9 @@
+{
+  "name": "pixeltorio_ent_base",
+  "version": "0.1.0",
+  "title": "Pixeltorio8 - ASCII graphics!",
+  "author": "Kabury",
+  "factorio_version": "2.0",
+  "dependencies": ["base >= 2.0"],
+  "description": "This mod changes the base game entities graphics to an ASCII style!"
+}
