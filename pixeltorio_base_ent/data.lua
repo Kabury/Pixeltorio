@@ -559,6 +559,9 @@ data.raw["corpse"]["behemoth-worm-corpse-burrowed"].ground_patch_decay=nil
 for i,deconame in pairs(data.raw["optimized-decorative"]) do
     for j,decopic in ipairs(deconame.pictures) do
         decopic.filename="__pixeltorio_base_ent__/graphics/tileset/bigdummy.png"
+        decopic.position={0,0}
+        decopic.x=0
+        decopic.y=0
     end
 end
 
