@@ -62,11 +62,10 @@ local function rotated_glyph(glyph, o)
 end
 
 local tau = math.pi * 2
-local sqrt2 = math.sqrt(2)
 local cos = math.cos
 local sin = math.sin
 
--- Rather than rotating offsets in the usual fashion, we skew their positions instead. This lets sprites smoothly slide past each
+-- Rather than rotating glyph offsets in the usual fashion, we skew them instead. This lets sprites smoothly slide past each
 -- other without unsightly gaps or overlaps for diagonal orientations. Skewing is always done laterally relative to the given
 -- orientation, approaching a full grid step of skew at an offset of 45 degrees from cardinal directions. Discontinuities exist
 -- where those regions meet, but the overall result is much nicer-looking than the alternative. Horizontal skewing is used at those
@@ -80,9 +79,9 @@ local sin = math.sin
 ---@return Vector
 local function rotated_shift(shift, o)
     local x, y = shift[1], shift[2]
-    o = o % 1
-    local s, c = sin(o * tau), cos(o * tau)
-    if c*c > 0.5 then
+    o = o*tau
+    local s, c = sin(o), cos(o)
+    if c*c >= 0.5 then
         -- Skew horizontally
         return {
             (c < 0 and -1 or 1)*(x - y * s/c),
