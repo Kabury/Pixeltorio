@@ -9,14 +9,14 @@ function removeFirst(tbl,val)
 end
 
 function deep_tint (tabl, tint)  --thx darkfrei
-	for i,  v in pairs (tabl) do
-		if type (v) == "table" then
-			deep_tint (v, tint)
-		end
-	end
-	if tabl.picture then 
-		tabl.tint = tint
-	end
+    for i,  v in pairs (tabl) do
+        if type (v) == "table" then
+            deep_tint (v, tint)
+        end
+    end
+    if tabl.picture then
+        tabl.tint = tint
+    end
 end
 
 function helper(arg)
@@ -37,7 +37,7 @@ function helper(arg)
     if cres == nil then cres = resolution end
     allen = x*y
     if #chars == 2 then chars = string.rep(chars,allen) end
-    if #ftint == 1 then 
+    if #ftint == 1 then
         for i = 1,allen do
             ftint[i] = ftint[1]
         end
@@ -84,7 +84,7 @@ data.raw["character"]["character"].animations={
         running_with_gun={
             filename="__pixeltorio_base_ent__/graphics/tileset/character.png",width=resolution*1,height=resolution*2,scale=32/resolution,line_length=18,frame_count=1,shift={0,-1},direction_count=18
         }
-    }   
+    }
 }
 
 data.raw["accumulator"]["accumulator"].chargable_graphics={
@@ -243,7 +243,7 @@ data.raw["corpse"]["lab-remnants"].animation={layers=helper{chars="∅,∅,∅,�
 
 data.raw["beacon"]["beacon"].graphics_set={
     animation_list={
-        {animation={layers=helper{chars="b,Ɨ,b,b,Ɨ,b,b,b,b"}}}  
+        {animation={layers=helper{chars="b,Ɨ,b,b,Ɨ,b,b,b,b"}}}
     }
 }
 data.raw["corpse"]["beacon-remnants"].animation={layers=helper{chars="∅,∅,∅,∅,Ɨ,∅,∅,b,∅",ftint={{r=1,g=0.3,b=0.5}}}}
