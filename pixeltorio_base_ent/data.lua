@@ -19,6 +19,7 @@ local function deep_tint (tabl, tint)  --thx darkfrei
     end
 end
 
+
 -- Lookup table for rotated variants of sprites. For each key, its value is a table of evenly spaced rotations over 360 degrees.
 -- This isn't necessarily the smartest way to do this, but it is a pretty quick and straightforward way to start with figuring out
 -- a nice-looking approach to glyph rotations in the first place. A more practical solution might be to define these relationships
@@ -97,7 +98,9 @@ local function rotated_shift(shift, o)
 end
 
 local function helper(arg)
-    local chars,ftint,x,y,btint,b,offx,offy,offz,var,dir,fram,cwidth,cheight,cres = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.offz,arg.var,arg.dir,arg.fram,arg.cwidth,arg.cheight,arg.cres
+    local chars,ftint,x,y,btint,b,offx,offy,offz,var,dir,fram,linlen,cwidth,cheight,cres = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.offz,arg.var,arg.dir,arg.fram,arg.linlen,arg.cwidth,arg.cheight,arg.cres
+
+
     if chars == nil then chars = "a," end
     if b == nil then b = "background" end
     if x == nil then x = 3 end
@@ -110,6 +113,7 @@ local function helper(arg)
     if var == nil then var = 1 end
     if dir == nil then dir = 1 end
     if fram == nil then fram = 1 end
+    if linlen == nil then linlen = 1 end
     if cwidth == nil then cwidth = 1 end
     if cheight == nil then cheight = 1 end
     if cres == nil then cres = resolution end
@@ -160,9 +164,9 @@ local function helper(arg)
         layerstable[i*2] = {filename=filename,filenames=filenames,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180,apply_runtime_tint=arg.apply_runtime_tint}
         -- Individual sprite graphics
         layerstable[i*2-1].lines_per_file = 1
-        layerstable[i*2-1].line_length = 1
+        layerstable[i*2-1].line_length = linlen
         layerstable[i*2].lines_per_file = 1
-        layerstable[i*2].line_length = 1
+        layerstable[i*2].line_length = linlen
         -- Thanks to a more enlightened approach to asset creation, these sprites do not suffer from the usual flaws introduced by 3D rendering software
         layerstable[i*2-1].apply_projection = false
         layerstable[i*2].apply_projection = false
@@ -187,8 +191,10 @@ data.raw["character"]["character"].animations={
 
 data.raw["accumulator"]["accumulator"].chargable_graphics={
     picture={layers=helper{chars="⚡,%,%,%",x=2,y=2}},
-    charge_animation={layers=helper{chars="⚡,%,%,%",x=2,y=2,ftint={{r=1,g=1,b=0.5}}}},
-    discharge_animation={layers=helper{chars="⚡,%,%,%",x=2,y=2,ftint={{r=1,g=0.5,b=0.5}}}}
+    charge_animation={layers=helper{chars="⚡,%,%,%",x=2,y=2,ftint={{r=0.5,g=1,b=0.5}}}},
+    charge_cooldown=1,
+    discharge_animation={layers=helper{chars="⚡,%,%,%",x=2,y=2,ftint={{r=1,g=0.5,b=0.5}}}},
+    discharge_cooldown=1,
 }
 data.raw["corpse"]["accumulator-remnants"].animation={layers=helper{chars="%,∅,∅,∅",x=2,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
 
@@ -459,7 +465,7 @@ data.raw["unit"]["small-biter"].attack_parameters.animation={
 data.raw["corpse"]["small-biter-corpse"].animation={layers=helper{chars="ƀ",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["corpse"]["small-biter-corpse"].decay_animation=nil
 data.raw["corpse"]["small-biter-corpse"].direction_shuffle=nil
-
+data.raw["corpse"]["small-biter-corpse"].ground_patch={layers=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["unit"]["medium-biter"].run_animation={
@@ -471,7 +477,7 @@ data.raw["unit"]["medium-biter"].attack_parameters.animation={
 data.raw["corpse"]["medium-biter-corpse"].animation={layers=helper{chars="ƀ,ƀ",x=2,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["corpse"]["medium-biter-corpse"].decay_animation=nil
 data.raw["corpse"]["medium-biter-corpse"].direction_shuffle=nil
-
+data.raw["corpse"]["medium-biter-corpse"].ground_patch={layers=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["unit"]["big-biter"].run_animation={
@@ -483,7 +489,7 @@ data.raw["unit"]["big-biter"].attack_parameters.animation={
 data.raw["corpse"]["big-biter-corpse"].animation={layers=helper{chars="Ƀ,Ƀ",x=2,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["corpse"]["big-biter-corpse"].decay_animation=nil
 data.raw["corpse"]["big-biter-corpse"].direction_shuffle=nil
-
+data.raw["corpse"]["big-biter-corpse"].ground_patch={layers=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["unit"]["behemoth-biter"].run_animation={
@@ -495,7 +501,7 @@ data.raw["unit"]["behemoth-biter"].attack_parameters.animation={
 data.raw["corpse"]["behemoth-biter-corpse"].animation={layers=helper{chars="Ƀ,Ƀ,Ƀ,Ƀ",x=2,y=2,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["corpse"]["behemoth-biter-corpse"].decay_animation=nil
 data.raw["corpse"]["behemoth-biter-corpse"].direction_shuffle=nil
-
+data.raw["corpse"]["behemoth-biter-corpse"].ground_patch={layers=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["unit"]["small-spitter"].run_animation={
@@ -508,7 +514,7 @@ data.raw["unit"]["small-spitter"].alternative_attacking_frame_sequence=nil
 data.raw["corpse"]["small-spitter-corpse"].animation={layers=helper{chars="ꞩ",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["corpse"]["small-spitter-corpse"].decay_animation=nil
 data.raw["corpse"]["small-spitter-corpse"].direction_shuffle=nil
-
+data.raw["corpse"]["small-spitter-corpse"].ground_patch={layers=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["unit"]["medium-spitter"].run_animation={
@@ -521,7 +527,7 @@ data.raw["unit"]["medium-spitter"].alternative_attacking_frame_sequence=nil
 data.raw["corpse"]["medium-spitter-corpse"].animation={layers=helper{chars="ꞩ,ꞩ",x=2,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["corpse"]["medium-spitter-corpse"].decay_animation=nil
 data.raw["corpse"]["medium-spitter-corpse"].direction_shuffle=nil
-
+data.raw["corpse"]["medium-spitter-corpse"].ground_patch={layers=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["unit"]["big-spitter"].run_animation={
@@ -534,7 +540,7 @@ data.raw["unit"]["big-spitter"].alternative_attacking_frame_sequence=nil
 data.raw["corpse"]["big-spitter-corpse"].animation={layers=helper{chars="Ꞩ,Ꞩ,Ꞩ",x=3,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["corpse"]["big-spitter-corpse"].decay_animation=nil
 data.raw["corpse"]["big-spitter-corpse"].direction_shuffle=nil
-
+data.raw["corpse"]["big-spitter-corpse"].ground_patch={layers=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["unit"]["behemoth-spitter"].run_animation={
@@ -547,7 +553,7 @@ data.raw["unit"]["behemoth-spitter"].alternative_attacking_frame_sequence=nil
 data.raw["corpse"]["behemoth-spitter-corpse"].animation={layers=helper{chars="Ꞩ,Ꞩ,Ꞩ,Ꞩ",x=4,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["corpse"]["behemoth-spitter-corpse"].decay_animation=nil
 data.raw["corpse"]["behemoth-spitter-corpse"].direction_shuffle=nil
-
+data.raw["corpse"]["behemoth-spitter-corpse"].ground_patch={layers=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["unit-spawner"]["spitter-spawner"].graphics_set={
@@ -1105,24 +1111,24 @@ data.raw["corpse"]["pipe-to-ground-remnants"].animation={layers=helper{chars="�
 data.raw["storage-tank"]["storage-tank"].pictures={
     picture={
         north={
-            layers=helper{chars="┛,t,t,t,≞,t,t,t,┏",btint={{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0}}},
+            layers=helper{chars="┛,≞,t,t,≞,t,t,≞,┏",btint={{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0}}},
         },
         south={
-            layers=helper{chars="┛,t,t,t,≞,t,t,t,┏",btint={{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0}}},
+            layers=helper{chars="┛,≞,t,t,≞,t,t,≞,┏",btint={{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0}}},
         },
         east={
-            layers=helper{chars="t,t,┗,t,≞,t,┓,t,t",btint={{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0}}},
+            layers=helper{chars="t,≞,┗,t,≞,t,┓,≞,t",btint={{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0}}},
         },
         west={
-            layers=helper{chars="t,t,┗,t,≞,t,┓,t,t",btint={{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0}}},
+            layers=helper{chars="t,≞,┗,t,≞,t,┓,≞,t",btint={{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0},{r=0,g=0,b=0},{r=0,g=0,b=0,a=0},{r=0,g=0,b=0}}},
         }
     },
-    window_background={layers=helper{chars="≞",x=1,y=1}},
+    window_background={layers=helper{chars="≞,≞,≞",x=1,y=3}},
     fluid_background={layers=helper{chars="≋",x=1,y=1}},
     --flow_sprite={layers=helper{chars="≋",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}},
     --gas_flow={layers=helper{chars="≋",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}},
 }
-data.raw["storage-tank"]["storage-tank"].window_bounding_box={{-0.5,-0.5},{0.5,0.5}}
+data.raw["storage-tank"]["storage-tank"].window_bounding_box={{-0.5,-1.5},{0.5,1.5}}
 data.raw["storage-tank"]["storage-tank"].fluid_box.pipe_picture=nil
 data.raw["storage-tank"]["storage-tank"].fluid_box.pipe_covers=nil
 data.raw["corpse"]["storage-tank-remnants"].animation={layers=helper{chars="∅,∅,∅,∅,≋,∅,∅,t,∅",ftint={{r=1,g=0.3,b=0.5}}}}
@@ -1270,6 +1276,46 @@ data.raw["smoke-with-trigger"]["poison-cloud"].animation={layers={helper{chars="
 data.raw["smoke-with-trigger"]["poison-cloud-visual-dummy"].animation={layers={helper{chars="⌇",x=1,y=1,ftint={{r=0.5,g=1,b=0.5}}}[2]}}
 data.raw["explosion"]["atomic-fire-smoke"].animations={layers={helper{chars="⌇",x=1,y=1,ftint={{r=0.5,g=1,b=0.5}}}[2]}}
 data.raw["explosion"]["atomic-nuke-shockwave"].animations={layers={helper{chars="⌇",x=1,y=1,ftint={{r=1,g=1,b=0.5}}}[2]}}
+
+
+data.raw["corpse"]["huge-scorchmark-tintable"].ground_patch={layers=helper{chars="♒",x=1,y=1,cres=4,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["big-scorchmark-tintable"].ground_patch={layers=helper{chars="♒",x=1,y=1,cres=8,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["medium-scorchmark-tintable"].ground_patch={layers=helper{chars="♒",x=1,y=1,cres=16,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["small-scorchmark-tintable"].ground_patch={layers=helper{chars="♒",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["huge-scorchmark"].ground_patch={layers=helper{chars="♒",x=1,y=1,cres=4,ftint={{r=0.2,g=0,b=0}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["big-scorchmark"].ground_patch={layers=helper{chars="♒",x=1,y=1,cres=8,ftint={{r=0.2,g=0,b=0}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["medium-scorchmark"].ground_patch={layers=helper{chars="♒",x=1,y=1,cres=16,ftint={{r=0.2,g=0,b=0}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["small-scorchmark"].ground_patch={layers=helper{chars="♒",x=1,y=1,ftint={{r=0.2,g=0,b=0}},btint={{r=0,g=0,b=0,a=0}}}}
+
+data.raw["corpse"]["huge-scorchmark-tintable"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["big-scorchmark-tintable"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["medium-scorchmark-tintable"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["small-scorchmark-tintable"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["huge-scorchmark"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["big-scorchmark"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["medium-scorchmark"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["small-scorchmark"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+
+
+data.raw["explosion"]["nuke-explosion"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=4,ftint={{r=1,g=0.6,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+        helper{chars="💥",x=1,y=1,cres=8,ftint={{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+        helper{chars="💥",x=1,y=1,cres=16,ftint={{r=0.5,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
+
+data.raw["explosion"]["big-artillery-explosion"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=6,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+        helper{chars="💥",x=1,y=1,cres=12,ftint={{r=1,g=0.75,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+        helper{chars="💥",x=1,y=1,cres=24,ftint={{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
+
+
+
+
 
 data.raw["transport-belt"]["transport-belt"].belt_animation_set={
     animation_set={
@@ -1605,7 +1651,7 @@ data.raw["fire"]["crash-site-fire-flame"].pictures={sheet=helper{chars="🔥",x=
 data.raw["fire"]["crash-site-fire-flame"].smoke_source_pictures={sheet=helper{chars="⌇",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}}}[2]}
 
 data.raw["fire"]["fire-flame"].pictures={sheet=helper{chars="🔥",x=1,y=1,ftint={{r=1,g=0.25,b=0.25}}}[2]}
-data.raw["fire"]["fire-flame"].burnt_patch_pictures={sheet=helper{chars="♒",x=1,y=1,ftint={{r=0.2,g=0,b=0}}}[2]}
+data.raw["fire"]["fire-flame"].burnt_patch_pictures={sheet=helper{chars="♒",x=1,y=1,ftint={{r=0.3,g=0,b=0}}}[2]}
 data.raw["fire"]["fire-flame"].smoke_source_pictures={sheet=helper{chars="⌇",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}}}[2]}
 
 data.raw["fire"]["fire-flame-on-tree"].pictures={sheet=helper{chars="🔥",x=1,y=1,ftint={{r=1,g=0.25,b=0.25}}}[2]}
@@ -2625,6 +2671,13 @@ data.raw["tile"]["nuclear-ground"].variants={
 data.raw["tile"]["nuclear-ground"].tint={r=0.2,g=0.6,b=0.2}
 data.raw["tile"]["nuclear-ground"].effect=nil
 
+for alltilename,alltiletable in pairs(data.raw["tile"]) do
+    if string.find(alltilename,".*") ~= nil then
+        alltiletable.transitions=nil
+        alltiletable.transitions_between_transitions=nil
+    end
+end
+
 
 
 
@@ -2642,10 +2695,14 @@ for particlename,particletable in pairs(data.raw["optimized-particle"]) do
     end
 end
 
+data.raw["optimized-particle"]["shell-particle"].pictures={
+    sheets=helper{chars="·",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}
+}
+
 for particlename,particletable in pairs(data.raw["particle-source"]) do
     if string.find(particlename,".*blood.*") ~= nil then --will match everything
         particletable.pictures={
-            sheets=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0.25,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}
+            sheets=helper{chars="💧",x=1,y=1,ftint={{r=0.25,g=0,b=0.25}},btint={{r=0,g=0,b=0,a=0}}}
         }
         particletable.shadows=nil
     end
@@ -2701,3 +2758,580 @@ data.raw["spider-vehicle"]["spidertron"].graphics_set={
         layers=helper{chars="🕷",x=1,y=1,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}},cres=16}
     }
 }
+
+
+
+
+infinitypipetint={{r=1,g=0.5,b=1}}
+data.raw["infinity-pipe"]["infinity-pipe"].pictures={
+    straight_vertical_single={layers=helper{chars="￮",x=1,y=1,ftint=infinitypipetint}},
+    straight_vertical_single_visualization={layers=helper{chars="￮",x=1,y=1,ftint=infinitypipetint}},
+    straight_vertical_single_disabled_visualization={layers=helper{chars="￮",x=1,y=1,ftint=infinitypipetint}},
+    straight_vertical={layers=helper{chars="┃",x=1,y=1,ftint=infinitypipetint}},
+    straight_vertical_visualization={layers=helper{chars="┃",x=1,y=1,ftint=infinitypipetint}},
+    straight_vertical_disabled_visualization={layers=helper{chars="┃",x=1,y=1,ftint=infinitypipetint}},
+    straight_vertical_window={layers=helper{chars="┃",x=1,y=1,ftint=infinitypipetint}},
+    straight_vertical_window_visualization={layers=helper{chars="┃",x=1,y=1,ftint=infinitypipetint}},
+    straight_vertical_window_disabled_visualization={layers=helper{chars="┃",x=1,y=1,ftint=infinitypipetint}},
+    straight_horizontal={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    straight_horizontal_visualization={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    straight_horizontal_disabled_visualization={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    straight_horizontal_window={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    straight_horizontal_window_visualization={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    straight_horizontal_window_disabled_visualization={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    corner_down_right={layers=helper{chars="┏",x=1,y=1,ftint=infinitypipetint}},
+    corner_down_right_visualization={layers=helper{chars="┏",x=1,y=1,ftint=infinitypipetint}},
+    corner_down_right_disabled_visualization={layers=helper{chars="┏",x=1,y=1,ftint=infinitypipetint}},
+    corner_down_left={layers=helper{chars="┓",x=1,y=1,ftint=infinitypipetint}},
+    corner_down_left_visualization={layers=helper{chars="┓",x=1,y=1,ftint=infinitypipetint}},
+    corner_down_left_disabled_visualization={layers=helper{chars="┓",x=1,y=1,ftint=infinitypipetint}},
+    corner_up_right={layers=helper{chars="┗",x=1,y=1,ftint=infinitypipetint}},
+    corner_up_right_visualization={layers=helper{chars="┗",x=1,y=1,ftint=infinitypipetint}},
+    corner_up_right_disabled_visualization={layers=helper{chars="┗",x=1,y=1,ftint=infinitypipetint}},
+    corner_up_left={layers=helper{chars="┛",x=1,y=1,ftint=infinitypipetint}},
+    corner_up_left_visualization={layers=helper{chars="┛",x=1,y=1,ftint=infinitypipetint}},
+    corner_up_left_disabled_visualization={layers=helper{chars="┛",x=1,y=1,ftint=infinitypipetint}},
+    t_up={layers=helper{chars="┻",x=1,y=1,ftint=infinitypipetint}},
+    t_up_visualization={layers=helper{chars="┻",x=1,y=1,ftint=infinitypipetint}},
+    t_up_disabled_visualization={layers=helper{chars="┻",x=1,y=1,ftint=infinitypipetint}},
+    t_right={layers=helper{chars="┣",x=1,y=1,ftint=infinitypipetint}},
+    t_right_visualization={layers=helper{chars="┣",x=1,y=1,ftint=infinitypipetint}},
+    t_right_disabled_visualization={layers=helper{chars="┣",x=1,y=1,ftint=infinitypipetint}},
+    t_down={layers=helper{chars="┳",x=1,y=1,ftint=infinitypipetint}},
+    t_down_visualization={layers=helper{chars="┳",x=1,y=1,ftint=infinitypipetint}},
+    t_down_disabled_visualization={layers=helper{chars="┳",x=1,y=1,ftint=infinitypipetint}},
+    t_left={layers=helper{chars="┫",x=1,y=1,ftint=infinitypipetint}},
+    t_left_visualization={layers=helper{chars="┫",x=1,y=1,ftint=infinitypipetint}},
+    t_left_disabled_visualization={layers=helper{chars="┫",x=1,y=1,ftint=infinitypipetint}},
+    ending_up={layers=helper{chars="╹",x=1,y=1,ftint=infinitypipetint}},
+    ending_up_visualization={layers=helper{chars="╹",x=1,y=1,ftint=infinitypipetint}},
+    ending_up_disabled_visualization={layers=helper{chars="╹",x=1,y=1,ftint=infinitypipetint}},
+    ending_right={layers=helper{chars="╺",x=1,y=1,ftint=infinitypipetint}},
+    ending_right_visualization={layers=helper{chars="╺",x=1,y=1,ftint=infinitypipetint}},
+    ending_right_disabled_visualization={layers=helper{chars="╺",x=1,y=1,ftint=infinitypipetint}},
+    ending_down={layers=helper{chars="╻",x=1,y=1,ftint=infinitypipetint}},
+    ending_down_visualization={layers=helper{chars="╻",x=1,y=1,ftint=infinitypipetint}},
+    ending_down_disabled_visualization={layers=helper{chars="╻",x=1,y=1,ftint=infinitypipetint}},
+    ending_left={layers=helper{chars="╸",x=1,y=1,ftint=infinitypipetint}},
+    ending_left_visualization={layers=helper{chars="╸",x=1,y=1,ftint=infinitypipetint}},
+    ending_left_disabled_visualization={layers=helper{chars="╸",x=1,y=1,ftint=infinitypipetint}},
+    cross={layers=helper{chars="╋",x=1,y=1,ftint=infinitypipetint}},
+    cross_visualization={layers=helper{chars="╋",x=1,y=1,ftint=infinitypipetint}},
+    cross_disabled_visualization={layers=helper{chars="╋",x=1,y=1,ftint=infinitypipetint}},
+    vertical_window_background={layers=helper{chars="┃",x=1,y=1,ftint=infinitypipetint}},
+    horizontal_window_background={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    low_temperature_flow={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    middle_temperature_flow={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    high_temperature_flow={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+    gas_flow={layers=helper{chars="━",x=1,y=1,ftint=infinitypipetint}},
+}
+data.raw["infinity-pipe"]["infinity-pipe"].fluid_box.pipe_picture=nil
+data.raw["infinity-pipe"]["infinity-pipe"].fluid_box.pipe_covers=nil
+
+
+data.raw["programmable-speaker"]["programmable-speaker"].sprite={layers=helper{chars="🔊",x=1,y=1}} 
+data.raw["display-panel"]["display-panel"].sprites={
+    north={layers=helper{chars="📺",x=1,y=1,offy=-0.25}},
+    south={layers=helper{chars="📺",x=1,y=1,offy=-0.25}},
+    east={layers=helper{chars="📺",x=1,y=1,offy=-0.25}},
+    west={layers=helper{chars="📺",x=1,y=1,offy=-0.25}}
+}
+
+data.raw["power-switch"]["power-switch"].power_on_animation={layers=helper{chars="⚡,⚡,1,2",x=2,y=2}}
+
+data.raw["power-switch"]["power-switch"].led_off={layers=helper{chars="∥",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["power-switch"]["power-switch"].led_on={layers=helper{chars="━",x=1,y=1,ftint={{r=0.5,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+
+data.raw["infinity-container"]["infinity-chest"].picture={layers=helper{chars="☑",x=1,y=1,ftint={{r=1,g=0.5,b=1}}}}
+
+data.raw["electric-energy-interface"]["electric-energy-interface"].picture={layers=helper{chars="⚡,⚡,⚡,⚡",x=2,y=2,ftint={{r=1,g=0.5,b=1}}}}
+
+
+data.raw["heat-interface"]["heat-interface"].picture={layers=helper{chars="🌡",x=1,y=1,ftint={{r=1,g=0.5,b=1}}}}
+
+
+data.raw["constant-combinator"]["constant-combinator"].sprites={
+    north={layers=helper{chars="㏄",x=1,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="㏄",x=1,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="㏄",x=1,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="㏄",x=1,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+
+data.raw["selector-combinator"]["selector-combinator"].max_symbol_sprites={
+    north={layers=helper{chars="⭷,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,⭷",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,⭷",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="⭷,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["selector-combinator"]["selector-combinator"].min_symbol_sprites={
+    north={layers=helper{chars="⭸,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,⭸",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,⭸",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="⭸,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["selector-combinator"]["selector-combinator"].count_symbol_sprites={
+    north={layers=helper{chars="#,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,#",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,#",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="#,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["selector-combinator"]["selector-combinator"].random_symbol_sprites={
+    north={layers=helper{chars="🎲,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,🎲",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,🎲",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="🎲,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["selector-combinator"]["selector-combinator"].stack_size_sprites={
+    north={layers=helper{chars="◱,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,◱",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,◱",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="◱,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["selector-combinator"]["selector-combinator"].rocket_capacity_sprites={
+    north={layers=helper{chars="🚀,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,🚀",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,🚀",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="🚀,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["selector-combinator"]["selector-combinator"].quality_symbol_sprites={
+    north={layers=helper{chars="⚄,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,⚄",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,⚄",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="⚄,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["selector-combinator"]["selector-combinator"].sprites={
+    north={layers=helper{chars="Ⓒ,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+
+
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].plus_symbol_sprites={
+    north={layers=helper{chars="+,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,+",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,+",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="+,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].minus_symbol_sprites={
+    north={layers=helper{chars="−,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,−",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,−",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="−,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].multiply_symbol_sprites={
+    north={layers=helper{chars="×,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,×",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,×",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="×,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].divide_symbol_sprites={
+    north={layers=helper{chars="÷,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,÷",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,÷",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="÷,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].modulo_symbol_sprites={
+    north={layers=helper{chars="%,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,%",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,%",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="%,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].power_symbol_sprites={
+    north={layers=helper{chars="^,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,^",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,^",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="^,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].left_shift_symbol_sprites={
+    north={layers=helper{chars="↤,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,↤",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,↤",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="↤,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].right_shift_symbol_sprites={
+    north={layers=helper{chars="↦,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,↦",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,↦",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="↦,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].and_symbol_sprites={
+    north={layers=helper{chars="⋀,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,⋀",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,⋀",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="⋀,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].or_symbol_sprites={
+    north={layers=helper{chars="⋁,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,⋁",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,⋁",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="⋁,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].xor_symbol_sprites={
+    north={layers=helper{chars="⊻,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,⊻",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,⊻",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="⊻,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["arithmetic-combinator"]["arithmetic-combinator"].sprites={
+    north={layers=helper{chars="Ⓒ,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+
+
+
+data.raw["decider-combinator"]["decider-combinator"].equal_symbol_sprites={
+    north={layers=helper{chars="=,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,=",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,=",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="=,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["decider-combinator"]["decider-combinator"].greater_symbol_sprites={
+    north={layers=helper{chars=">,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,>",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,>",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars=">,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["decider-combinator"]["decider-combinator"].less_symbol_sprites={
+    north={layers=helper{chars="<,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,<",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,<",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="<,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["decider-combinator"]["decider-combinator"].not_equal_symbol_sprites={
+    north={layers=helper{chars="≠,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,≠",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,≠",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="≠,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["decider-combinator"]["decider-combinator"].greater_or_equal_symbol_sprites={
+    north={layers=helper{chars="≥,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,≥",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,≥",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="≥,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["decider-combinator"]["decider-combinator"].less_or_equal_symbol_sprites={
+    north={layers=helper{chars="≤,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,≤",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,≤",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="≤,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+data.raw["decider-combinator"]["decider-combinator"].sprites={
+    north={layers=helper{chars="Ⓒ,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    south={layers=helper{chars="Ⓒ,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
+    east={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
+    west={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
+}
+
+
+
+
+
+data.raw["loader"]["loader"].belt_animation_set={
+    animation_set={
+        filename="__pixeltorio_base_ent__/graphics/tileset/dummy.png",width=resolution,height=resolution,scale=32/resolution,direction_count=1
+    },
+    north_index=1,
+    south_index=1,
+    east_index=1,
+    west_index=1,
+    starting_north_index=1,
+    ending_north_index=1,
+    starting_south_index=1,
+    ending_south_index=1,
+    starting_east_index=1,
+    ending_east_index=1,
+    starting_west_index=1,
+    ending_west_index=1,
+}
+data.raw["loader"]["loader"].structure={
+    direction_in={
+        north={
+            layers=helper{chars="↥,⇑",x=1,y=2,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        south={
+            layers=helper{chars="⇓,↧",x=1,y=2,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        east={
+            layers=helper{chars="⇒,↦",x=2,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        west={
+            layers=helper{chars="↤,⇐",x=2,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+    },
+    direction_out={
+        north={
+            layers=helper{chars="↧,⇓",x=1,y=2,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        south={
+            layers=helper{chars="⇑,↥",x=1,y=2,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        east={
+            layers=helper{chars="⇐,↤",x=2,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        west={
+            layers=helper{chars="↦,⇒",x=2,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+    },
+    back_patch=nil,
+    front_patch=nil
+}
+
+
+
+data.raw["loader"]["fast-loader"].belt_animation_set={
+    animation_set={
+        filename="__pixeltorio_base_ent__/graphics/tileset/dummy.png",width=resolution,height=resolution,scale=32/resolution,direction_count=1
+    },
+    north_index=1,
+    south_index=1,
+    east_index=1,
+    west_index=1,
+    starting_north_index=1,
+    ending_north_index=1,
+    starting_south_index=1,
+    ending_south_index=1,
+    starting_east_index=1,
+    ending_east_index=1,
+    starting_west_index=1,
+    ending_west_index=1,
+}
+data.raw["loader"]["fast-loader"].structure={
+    direction_in={
+        north={
+            layers=helper{chars="↥,⇑",x=1,y=2,ftint={{r=1,g=0.25,b=0.25}}} 
+        },
+        south={
+            layers=helper{chars="⇓,↧",x=1,y=2,ftint={{r=1,g=0.25,b=0.25}}} 
+        },
+        east={
+            layers=helper{chars="⇒,↦",x=2,y=1,ftint={{r=1,g=0.25,b=0.25}}} 
+        },
+        west={
+            layers=helper{chars="↤,⇐",x=2,y=1,ftint={{r=1,g=0.25,b=0.25}}} 
+        },
+    },
+    direction_out={
+        north={
+            layers=helper{chars="↧,⇓",x=1,y=2,ftint={{r=1,g=0.25,b=0.25}}} 
+        },
+        south={
+            layers=helper{chars="⇑,↥",x=1,y=2,ftint={{r=1,g=0.25,b=0.25}}} 
+        },
+        east={
+            layers=helper{chars="⇐,↤",x=2,y=1,ftint={{r=1,g=0.25,b=0.25}}} 
+        },
+        west={
+            layers=helper{chars="↦,⇒",x=2,y=1,ftint={{r=1,g=0.25,b=0.25}}} 
+        },
+    },
+    back_patch=nil,
+    front_patch=nil
+}
+
+
+
+data.raw["loader"]["express-loader"].belt_animation_set={
+    animation_set={
+        filename="__pixeltorio_base_ent__/graphics/tileset/dummy.png",width=resolution,height=resolution,scale=32/resolution,direction_count=1
+    },
+    north_index=1,
+    south_index=1,
+    east_index=1,
+    west_index=1,
+    starting_north_index=1,
+    ending_north_index=1,
+    starting_south_index=1,
+    ending_south_index=1,
+    starting_east_index=1,
+    ending_east_index=1,
+    starting_west_index=1,
+    ending_west_index=1,
+}
+data.raw["loader"]["express-loader"].structure={
+    direction_in={
+        north={
+            layers=helper{chars="↥,⇑",x=1,y=2,ftint={{r=0.25,g=0.25,b=1}}} 
+        },
+        south={
+            layers=helper{chars="⇓,↧",x=1,y=2,ftint={{r=0.25,g=0.25,b=1}}} 
+        },
+        east={
+            layers=helper{chars="⇒,↦",x=2,y=1,ftint={{r=0.25,g=0.25,b=1}}} 
+        },
+        west={
+            layers=helper{chars="↤,⇐",x=2,y=1,ftint={{r=0.25,g=0.25,b=1}}} 
+        },
+    },
+    direction_out={
+        north={
+            layers=helper{chars="↧,⇓",x=1,y=2,ftint={{r=0.25,g=0.25,b=1}}} 
+        },
+        south={
+            layers=helper{chars="⇑,↥",x=1,y=2,ftint={{r=0.25,g=0.25,b=1}}} 
+        },
+        east={
+            layers=helper{chars="⇐,↤",x=2,y=1,ftint={{r=0.25,g=0.25,b=1}}} 
+        },
+        west={
+            layers=helper{chars="↦,⇒",x=2,y=1,ftint={{r=0.25,g=0.25,b=1}}} 
+        },
+    },
+    back_patch=nil,
+    front_patch=nil
+}
+
+
+
+data.raw["loader-1x1"]["loader-1x1"].belt_animation_set={
+    animation_set={
+        filename="__pixeltorio_base_ent__/graphics/tileset/dummy.png",width=resolution,height=resolution,scale=32/resolution,direction_count=1
+    },
+    north_index=1,
+    south_index=1,
+    east_index=1,
+    west_index=1,
+    starting_north_index=1,
+    ending_north_index=1,
+    starting_south_index=1,
+    ending_south_index=1,
+    starting_east_index=1,
+    ending_east_index=1,
+    starting_west_index=1,
+    ending_west_index=1,
+}
+data.raw["loader-1x1"]["loader-1x1"].structure={
+    direction_in={
+        north={
+            layers=helper{chars="⇑",x=1,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        south={
+            layers=helper{chars="⇓",x=1,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        east={
+            layers=helper{chars="⇒",x=1,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        west={
+            layers=helper{chars="⇐",x=1,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+    },
+    direction_out={
+        north={
+            layers=helper{chars="⇓",x=1,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        south={
+            layers=helper{chars="⇑",x=1,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        east={
+            layers=helper{chars="⇐",x=1,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+        west={
+            layers=helper{chars="⇒",x=1,y=1,ftint={{r=1,g=1,b=0.25}}} 
+        },
+    },
+    back_patch=nil,
+    front_patch=nil
+}
+
+
+data.raw["linked-belt"]["linked-belt"].structure={
+    direction_in={
+        north={layers=helper{chars="⨺1",x=1,y=1,ftint={{r=1,g=1,b=1}}}},
+        south={layers=helper{chars="⨺2",x=1,y=1,ftint={{r=1,g=1,b=1}}}},
+        east={layers=helper{chars="⨺3",x=1,y=1,ftint={{r=1,g=1,b=1}}}},
+        west={layers=helper{chars="⨺4",x=1,y=1,ftint={{r=1,g=1,b=1}}}},
+    },
+    direction_out={
+        north={layers=helper{chars="⨹2",x=1,y=1,ftint={{r=1,g=1,b=1}}}},
+        south={layers=helper{chars="⨹1",x=1,y=1,ftint={{r=1,g=1,b=1}}}},
+        east={layers=helper{chars="⨹4",x=1,y=1,ftint={{r=1,g=1,b=1}}}},
+        west={layers=helper{chars="⨹3",x=1,y=1,ftint={{r=1,g=1,b=1}}}},
+    }
+}
+
+data.raw["linked-belt"]["linked-belt"].belt_animation_set={
+    animation_set={
+        filename="__pixeltorio_base_ent__/graphics/tileset/belt.png",width=resolution,height=resolution,scale=32/resolution,direction_count=13,tint={r=1,g=1,b=1}
+    },
+    north_index=1,
+    south_index=2,
+    east_index=3,
+    west_index=4,
+    south_to_east_index=5,
+    south_to_west_index=6,
+    north_to_east_index=7,
+    north_to_west_index=8,
+    west_to_north_index=9,
+    west_to_south_index=10,
+    east_to_north_index=11,
+    east_to_south_index=12,
+    starting_north_index=13,
+    starting_south_index=13,
+    starting_east_index=13,
+    starting_west_index=13,
+    ending_north_index=13,
+    ending_south_index=13,
+    ending_east_index=13,
+    ending_west_index=13,
+}
+
+data.raw["lane-splitter"]["lane-splitter"].belt_animation_set={
+    animation_set={
+        filename="__pixeltorio_base_ent__/graphics/tileset/belt.png",width=resolution,height=resolution,scale=32/resolution,direction_count=13,tint={r=1,g=1,b=0.25}
+    },
+    north_index=1,
+    south_index=2,
+    east_index=3,
+    west_index=4,
+    south_to_east_index=5,
+    south_to_west_index=6,
+    north_to_east_index=7,
+    north_to_west_index=8,
+    west_to_north_index=9,
+    west_to_south_index=10,
+    east_to_north_index=11,
+    east_to_south_index=12,
+    starting_north_index=13,
+    starting_south_index=13,
+    starting_east_index=13,
+    starting_west_index=13,
+    ending_north_index=13,
+    ending_south_index=13,
+    ending_east_index=13,
+    ending_west_index=13,
+}
+data.raw["lane-splitter"]["lane-splitter"].structure={
+    north={layers=helper{chars="ṡ1",x=1,y=1,ftint={{r=1,g=1,b=0.25}}}},
+    south={layers=helper{chars="ṡ2",x=1,y=1,ftint={{r=1,g=1,b=0.25}}}},
+    east={layers=helper{chars="ṡ3",x=1,y=1,ftint={{r=1,g=1,b=0.25}}}},
+    west={layers=helper{chars="ṡ4",x=1,y=1,ftint={{r=1,g=1,b=0.25}}}},
+}
+data.raw["lane-splitter"]["lane-splitter"].structure_patch=nil
+
+data.raw["burner-generator"]["burner-generator"].animation={
+    north={
+        layers=helper{chars="⚡,⊥,g,g,g,g,g,🔥,g,g,g,g,g,⊤,g",x=3,y=5,ftint={{r=1,g=1,b=1}}}
+    },
+    south={
+        layers=helper{chars="⚡,⊥,g,g,g,g,g,🔥,g,g,g,g,g,⊤,g",x=3,y=5,ftint={{r=1,g=1,b=1}}}
+    },
+    east={
+        layers=helper{chars="⚡,g,g,g,g,⊣,g,🔥,g,⊢,g,g,g,g,g",x=5,y=3,ftint={{r=1,g=1,b=1}}}
+    },
+    west={
+        layers=helper{chars="⚡,g,g,g,g,⊣,g,🔥,g,⊢,g,g,g,g,g",x=5,y=3,ftint={{r=1,g=1,b=1}}}
+    },
+}
+
+
+data.raw["container"]["blue-chest"].picture={layers=helper{chars="☑",x=1,y=1,ftint={{r=0.5,g=0.5,b=1}}}}
+data.raw["container"]["red-chest"].picture={layers=helper{chars="☑",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}}}}
+
+data.raw["linked-container"]["linked-chest"].picture={layers=helper{chars="☑",x=1,y=1,ftint={{r=1,g=1,b=1}}}}
+data.raw["proxy-container"]["proxy-container"].picture={layers=helper{chars="☑",x=1,y=1,ftint={{r=1,g=1,b=1}}}}
+
+
+data.raw["utility-sprites"]["default"].shoot_cursor_green={layers=helper{chars="⯐",x=1,y=1,ftint={{r=0.5,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["utility-sprites"]["default"].shoot_cursor_red={layers=helper{chars="⯐",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}},cres=8}}
