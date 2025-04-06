@@ -19,6 +19,84 @@ local function deep_tint (tabl, tint)  --thx darkfrei
     end
 end
 
+-- Lookup table for rotated variants of sprites. For each key, its value is a table of evenly spaced rotations over 360 degrees.
+-- This isn't necessarily the smartest way to do this, but it is a pretty quick and straightforward way to start with figuring out
+-- a nice-looking approach to glyph rotations in the first place. A more practical solution might be to define these relationships
+-- by how they're arranged in a single sprite sheet, which would also greatly simplify how we tell Factorio where each frame of a
+-- rotation is, as opposed to defining every one of them individually as they are now. It works for now, though.
+local glyph_rotation_groups = {
+    ["┃"] = { "┃", "╱", "━", "╲", "┃", "╱", "━", "╲" },
+    ["╋"] = { "╋", "⤫", "╋", "⤫", "╋", "⤫", "╋", "⤫" },
+    ["└"] = { "└", "┌", "┐", "┘" },
+    ["┗"] = { "┗", "┏", "┓", "┛" },
+    ["┻"] = { "┻", "┣", "┳", "┫" },
+    ["╹"] = { "╹", "╺", "╻", "╸" },
+    ["◝"] = { "◝", "◞", "◟", "◜" },
+    ["▴"] = { "▴", "▸", "▾", "◂" },
+}
+-- Build some big dumb lookup tables
+local glyph_rotations = {}
+for _, r in pairs(glyph_rotation_groups) do
+    glyph_rotations[r[1]] = r
+    local n = #r
+    for i = 2, n do
+        if not glyph_rotations[r[i]] then
+            rr = { r[i] }
+            for j = 2, n do
+                rr[j] = r[(i + j - 2) % n + 1]
+            end
+            glyph_rotations[r[i]] = rr
+        end
+    end
+end
+
+-- Rotate a glyph for the orientation, o. Orientation ranges from 0 to 1, with 0 and 1 referring to "north", increasing in the clockwise direction.
+---@param glyph string
+---@param o RealOrientation
+---@return string
+local function rotated_glyph(glyph, o)
+    local map = glyph_rotations[glyph]
+    if not map then return glyph end
+    local n = #map
+    return map[math.floor(o * n + 0.5) % n + 1]
+end
+
+local tau = math.pi * 2
+local sqrt2 = math.sqrt(2)
+local cos = math.cos
+local sin = math.sin
+
+-- Rather than rotating offsets in the usual fashion, we skew their positions instead. This lets sprites smoothly slide past each
+-- other without unsightly gaps or overlaps for diagonal orientations. Skewing is always done laterally relative to the given
+-- orientation, approaching a full grid step of skew at an offset of 45 degrees from cardinal directions. Discontinuities exist
+-- where those regions meet, but the overall result is much nicer-looking than the alternative. Horizontal skewing is used at those
+-- exact orientations.
+--
+-- Direction counts that are a factor of 8 ensure faithful grid-alignment always, at least locally, without off-grid "cheating".
+-- Multiples of 8 will include the discontinuities though (where the skewing is also the most extreme). To avoid those, a count of
+-- 12 is a decent minimum that includes the cardinal directions, or 36 for visually smoother (though still clearly discrete) steps.
+---@param shift Vector
+---@param o RealOrientation
+---@return Vector
+local function rotated_shift(shift, o)
+    local x, y = shift[1], shift[2]
+    o = o % 1
+    local s, c = sin(o * tau), cos(o * tau)
+    if c*c > 0.5 then
+        -- Skew horizontally
+        return {
+            (c < 0 and -1 or 1)*(x - y * s/c),
+            c < 0 and -y or y,
+        }
+    else
+        -- Skew vertically
+        return {
+            s < 0 and y or -y,
+            (s < 0 and -1 or 1)*(x + y * c/s),
+        }
+    end
+end
+
 local function helper(arg)
     local chars,ftint,x,y,btint,b,offx,offy,offz,var,dir,fram,cwidth,cheight,cres = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.offz,arg.var,arg.dir,arg.fram,arg.cwidth,arg.cheight,arg.cres
     if chars == nil then chars = "a," end
