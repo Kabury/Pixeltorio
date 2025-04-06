@@ -1,6 +1,6 @@
 local resolution = 32
 
-function removeFirst(tbl,val)
+local function removeFirst(tbl,val)
     for i,v in ipairs(tbl) do
         if v == val then
             return table.remove(tbl,i)
@@ -8,19 +8,96 @@ function removeFirst(tbl,val)
     end
 end
 
-function deep_tint (tabl, tint)  --thx darkfrei
-	for i,  v in pairs (tabl) do
-		if type (v) == "table" then
-			deep_tint (v, tint)
-		end
-	end
-	if tabl.picture then 
-		tabl.tint = tint
-	end
+local function deep_tint (tabl, tint)  --thx darkfrei
+    for i,  v in pairs (tabl) do
+        if type (v) == "table" then
+            deep_tint (v, tint)
+        end
+    end
+    if tabl.picture then
+        tabl.tint = tint
+    end
 end
 
-function helper(arg)
-    local chars,ftint,x,y,btint,b,offx,offy,var,dir,fram,cwidth,cheight,cres = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.var,arg.dir,arg.fram,arg.cwidth,arg.cheight,arg.cres
+-- Lookup table for rotated variants of sprites. For each key, its value is a table of evenly spaced rotations over 360 degrees.
+-- This isn't necessarily the smartest way to do this, but it is a pretty quick and straightforward way to start with figuring out
+-- a nice-looking approach to glyph rotations in the first place. A more practical solution might be to define these relationships
+-- by how they're arranged in a single sprite sheet, which would also greatly simplify how we tell Factorio where each frame of a
+-- rotation is, as opposed to defining every one of them individually as they are now. It works for now, though.
+local glyph_rotation_groups = {
+    ["┃"] = { "┃", "╱", "━", "╲", "┃", "╱", "━", "╲" },
+    ["╋"] = { "╋", "⤫", "╋", "⤫", "╋", "⤫", "╋", "⤫" },
+    ["└"] = { "└", "┌", "┐", "┘" },
+    ["┗"] = { "┗", "┏", "┓", "┛" },
+    ["┻"] = { "┻", "┣", "┳", "┫" },
+    ["╹"] = { "╹", "╺", "╻", "╸" },
+    ["◝"] = { "◝", "◞", "◟", "◜" },
+    ["▴"] = { "▴", "▸", "▾", "◂" },
+}
+-- Build some big dumb lookup tables
+local glyph_rotations = {}
+for _, r in pairs(glyph_rotation_groups) do
+    glyph_rotations[r[1]] = r
+    local n = #r
+    for i = 2, n do
+        if not glyph_rotations[r[i]] then
+            rr = { r[i] }
+            for j = 2, n do
+                rr[j] = r[(i + j - 2) % n + 1]
+            end
+            glyph_rotations[r[i]] = rr
+        end
+    end
+end
+
+-- Rotate a glyph for the orientation, o. Orientation ranges from 0 to 1, with 0 and 1 referring to "north", increasing in the clockwise direction.
+---@param glyph string
+---@param o RealOrientation
+---@return string
+local function rotated_glyph(glyph, o)
+    local map = glyph_rotations[glyph]
+    if not map then return glyph end
+    local n = #map
+    return map[math.floor(o * n + 0.5) % n + 1]
+end
+
+local tau = math.pi * 2
+local cos = math.cos
+local sin = math.sin
+
+-- Rather than rotating glyph offsets in the usual fashion, we skew them instead. This lets sprites smoothly slide past each
+-- other without unsightly gaps or overlaps for diagonal orientations. Skewing is always done laterally relative to the given
+-- orientation, approaching a full grid step of skew at an offset of 45 degrees from cardinal directions. Discontinuities exist
+-- where those regions meet, but the overall result is much nicer-looking than the alternative. Horizontal skewing is used at those
+-- exact orientations.
+--
+-- Direction counts that are a factor of 8 ensure faithful grid-alignment always, at least locally, without off-grid "cheating".
+-- Multiples of 8 will include the discontinuities though (where the skewing is also the most extreme). To avoid those, a count of
+-- 12 is a decent minimum that includes the cardinal directions, or 36 for visually smoother (though still clearly discrete) steps.
+---@param shift Vector
+---@param o RealOrientation
+---@return Vector
+local function rotated_shift(shift, o)
+    local x, y = shift[1], shift[2]
+    o = o*tau
+    local s, c = sin(o), cos(o)
+    if c*c >= 0.5 then
+        -- Skew horizontally
+        return {
+            (c < 0 and -1 or 1)*(x - y * s/c),
+            c < 0 and -y or y,
+        }
+    else
+        -- Skew vertically
+        return {
+            s < 0 and y or -y,
+            (s < 0 and -1 or 1)*(x + y * c/s),
+        }
+    end
+end
+
+local function helper(arg)
+    local chars,ftint,x,y,btint,b,offx,offy,offz,var,dir,fram,cwidth,cheight,cres = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.offz,arg.var,arg.dir,arg.fram,arg.cwidth,arg.cheight,arg.cres
     if chars == nil then chars = "a," end
     if b == nil then b = "background" end
     if x == nil then x = 3 end
@@ -29,15 +106,16 @@ function helper(arg)
     if btint == nil then btint = {{r=0,g=0,b=0}} end
     if offx == nil then offx = 0 end
     if offy == nil then offy = 0 end
+    if offz == nil then offz = 0 end
     if var == nil then var = 1 end
     if dir == nil then dir = 1 end
     if fram == nil then fram = 1 end
     if cwidth == nil then cwidth = 1 end
     if cheight == nil then cheight = 1 end
     if cres == nil then cres = resolution end
-    allen = x*y
+    local allen = x*y
     if #chars == 2 then chars = string.rep(chars,allen) end
-    if #ftint == 1 then 
+    if #ftint == 1 then
         for i = 1,allen do
             ftint[i] = ftint[1]
         end
@@ -47,27 +125,47 @@ function helper(arg)
             btint[i] = btint[1]
         end
     end
-    layerstable = {}
+    local layerstable = {}
+    offx = offx - (x-1)/2
+    offy = offy - (y-1)/2
     local i = 1
     for char in string.gmatch(chars,'([^,]+)') do
-        xcord=(i-1)%x - 1 + offx
-        ycord=math.floor((i-1)/x) - 1 + offy
-        if x%2 == 0 then xcord = xcord + 0.5 end
-        if y%2 == 0 then ycord = ycord + 0.5 end
-        if x == 1 then xcord = xcord + 1 end
-        if y == 1 then ycord = ycord + 1 end
-        if x == 4 then xcord = xcord - 1 end
-        if y == 4 then ycord = ycord - 1 end
-        if x == 5 then xcord = xcord - 1 end
-        if y == 5 then ycord = ycord - 1 end
-        if x == 9 then xcord = xcord - 3 end
-        if y == 9 then ycord = ycord - 3 end
-        if x == 11 then xcord = xcord - 4 end
-        if y == 11 then ycord = ycord - 4 end
+        local xcord=(i-1)%x + offx
+        local ycord=math.floor((i-1)/x) + offy
         if char == " " then char = "≞" end
         if b == " " then b = "≞" end
-        layerstable[i*2-1] =   {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. b .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
-        layerstable[i*2] = {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. char .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
+        -- individual filenames and shifts for each rotation frame
+        local filename_bg, filename, shift
+        local filenames_bg, filenames, frames = {}, {}, {}
+        for j=1,dir do
+            local o = (j-1)/dir
+            filenames_bg[j] = "__pixeltorio_base_ent__/graphics/tileset/" .. rotated_glyph(b, o) .. ".png"
+            filenames[j] = "__pixeltorio_base_ent__/graphics/tileset/" .. rotated_glyph(char, o) .. ".png"
+            local fshift = rotated_shift({ xcord, ycord }, o)
+            fshift[2] = fshift[2] - offz
+            frames[j] = {
+                shift = fshift,
+                x = 0, y = 0, -- All sprites are single frames
+            }
+        end
+        if dir == 1 then
+            filename_bg = filenames_bg[1]
+            filename = filenames[1]
+            shift = frames[1].shift
+            filenames_bg = nil
+            filenames = nil
+            frames = nil
+        end
+        layerstable[i*2-1] =   {filename=filename_bg,filenames=filenames_bg,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
+        layerstable[i*2] = {filename=filename,filenames=filenames,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180,apply_runtime_tint=arg.apply_runtime_tint}
+        -- Individual sprite graphics
+        layerstable[i*2-1].lines_per_file = 1
+        layerstable[i*2-1].line_length = 1
+        layerstable[i*2].lines_per_file = 1
+        layerstable[i*2].line_length = 1
+        -- Thanks to a more enlightened approach to asset creation, these sprites do not suffer from the usual flaws introduced by 3D rendering software
+        layerstable[i*2-1].apply_projection = false
+        layerstable[i*2].apply_projection = false
         i=i+1
     end
     return layerstable
@@ -84,7 +182,7 @@ data.raw["character"]["character"].animations={
         running_with_gun={
             filename="__pixeltorio_base_ent__/graphics/tileset/character.png",width=resolution*1,height=resolution*2,scale=32/resolution,line_length=18,frame_count=1,shift={0,-1},direction_count=18
         }
-    }   
+    }
 }
 
 data.raw["accumulator"]["accumulator"].chargable_graphics={
@@ -243,7 +341,7 @@ data.raw["corpse"]["lab-remnants"].animation={layers=helper{chars="∅,∅,∅,�
 
 data.raw["beacon"]["beacon"].graphics_set={
     animation_list={
-        {animation={layers=helper{chars="b,Ɨ,b,b,Ɨ,b,b,b,b"}}}  
+        {animation={layers=helper{chars="b,Ɨ,b,b,Ɨ,b,b,b,b"}}}
     }
 }
 data.raw["corpse"]["beacon-remnants"].animation={layers=helper{chars="∅,∅,∅,∅,Ɨ,∅,∅,b,∅",ftint={{r=1,g=0.3,b=0.5}}}}
@@ -1848,10 +1946,17 @@ data.raw["rail-chain-signal"]["rail-chain-signal"].ground_picture_set.signal_col
 
 data.raw["corpse"]["rail-chain-signal-remnants"].animation={layers=helper{chars="🚦",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
-
-data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,w,w,w,w,w,w,w,w,w,w",x=6,y=2,offx=-2,offy=-0.5}}}
-data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=6,y=2,offx=-2,offy=-0.5,ftint={{r=1,g=0.3,b=0.5}}}}
-
+local train_wheels = {rotated={layers=helper{chars="━,━,└,┘",x=2,y=2}}}
+data.raw["locomotive"]["locomotive"].pictures={rotated={layers=helper{chars="╱,╲,┃,┃,┃,┃,┃,┃,┃,┃,┃,┃",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
+data.raw["locomotive"]["locomotive"].wheels=train_wheels
+data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,W,W,W,W,W,W,W,W,w,w",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
+data.raw["cargo-wagon"]["cargo-wagon"].vertical_doors={layers=helper{chars="w,w,┃,┃,┃,┃,┃,┃,┃,┃,w,w",x=2,y=6,offz=1,apply_runtime_tint=true}}
+data.raw["cargo-wagon"]["cargo-wagon"].horizontal_doors={layers=helper{chars="w,━,━,━,━,w,w,━,━,━,━,w",x=6,y=2,offz=1,apply_runtime_tint=true}}
+data.raw["cargo-wagon"]["cargo-wagon"].wheels=train_wheels
+data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=2,y=6,ftint={{r=1,g=0.3,b=0.5}}}}
+-- I don't love how the fluid tanks look under rotation, so it might be worth adding support for "sub-sprites" that skew together uniformly for a more rigid appearance
+data.raw["fluid-wagon"]["fluid-wagon"].pictures={rotated={layers=helper{chars="◜,◝,◟,◞,◜,◝,◟,◞,◜,◝,◟,◞",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
+data.raw["fluid-wagon"]["fluid-wagon"].wheels=train_wheels
 
 data.raw["fish"]["fish"].pictures={sheet={layers=helper{chars="🐟",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}}
 
