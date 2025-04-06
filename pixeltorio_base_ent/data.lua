@@ -58,7 +58,7 @@ local function helper(arg)
         if char == " " then char = "≞" end
         if b == " " then b = "≞" end
         layerstable[i*2-1] =   {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. b .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
-        layerstable[i*2] = {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. char .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
+        layerstable[i*2] = {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. char .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180,apply_runtime_tint=arg.apply_runtime_tint}
         i=i+1
     end
     return layerstable
@@ -1839,8 +1839,13 @@ data.raw["rail-chain-signal"]["rail-chain-signal"].ground_picture_set.signal_col
 
 data.raw["corpse"]["rail-chain-signal-remnants"].animation={layers=helper{chars="🚦",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
-
-data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,w,w,w,w,w,w,w,w,w,w",x=6,y=2,offz=1}}}
+local train_wheels = {rotated={layers=helper{chars="━,━,└,┘",x=2,y=2}}}
+data.raw["locomotive"]["locomotive"].pictures={rotated={layers=helper{chars="━,━,━,━,━,╲,━,━,━,━,━,╱",x=6,y=2,offz=1,apply_runtime_tint=true}}}
+data.raw["locomotive"]["locomotive"].wheels=train_wheels
+data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="W,W,W,W,W,W,W,W,W,W,W,W",x=6,y=2,offz=1,apply_runtime_tint=true}}}
+data.raw["cargo-wagon"]["cargo-wagon"].vertical_doors={layers=helper{chars="W,W,w,w,w,w,w,w,w,w,W,W",x=2,y=6,offz=1,apply_runtime_tint=true}}
+data.raw["cargo-wagon"]["cargo-wagon"].horizontal_doors={layers=helper{chars="W,w,w,w,w,W,W,w,w,w,w,W",x=6,y=2,offz=1,apply_runtime_tint=true}}
+data.raw["cargo-wagon"]["cargo-wagon"].wheels=train_wheels
 data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=6,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
 
 
