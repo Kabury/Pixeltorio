@@ -1,6 +1,6 @@
 local resolution = 32
 
-function removeFirst(tbl,val)
+local function removeFirst(tbl,val)
     for i,v in ipairs(tbl) do
         if v == val then
             return table.remove(tbl,i)
@@ -8,7 +8,7 @@ function removeFirst(tbl,val)
     end
 end
 
-function deep_tint (tabl, tint)  --thx darkfrei
+local function deep_tint (tabl, tint)  --thx darkfrei
     for i,  v in pairs (tabl) do
         if type (v) == "table" then
             deep_tint (v, tint)
@@ -19,8 +19,8 @@ function deep_tint (tabl, tint)  --thx darkfrei
     end
 end
 
-function helper(arg)
-    local chars,ftint,x,y,btint,b,offx,offy,var,dir,fram,cwidth,cheight,cres = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.var,arg.dir,arg.fram,arg.cwidth,arg.cheight,arg.cres
+local function helper(arg)
+    local chars,ftint,x,y,btint,b,offx,offy,offz,var,dir,fram,cwidth,cheight,cres = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.offz,arg.var,arg.dir,arg.fram,arg.cwidth,arg.cheight,arg.cres
     if chars == nil then chars = "a," end
     if b == nil then b = "background" end
     if x == nil then x = 3 end
@@ -29,13 +29,14 @@ function helper(arg)
     if btint == nil then btint = {{r=0,g=0,b=0}} end
     if offx == nil then offx = 0 end
     if offy == nil then offy = 0 end
+    if offz == nil then offz = 0 end
     if var == nil then var = 1 end
     if dir == nil then dir = 1 end
     if fram == nil then fram = 1 end
     if cwidth == nil then cwidth = 1 end
     if cheight == nil then cheight = 1 end
     if cres == nil then cres = resolution end
-    allen = x*y
+    local allen = x*y
     if #chars == 2 then chars = string.rep(chars,allen) end
     if #ftint == 1 then
         for i = 1,allen do
@@ -47,23 +48,13 @@ function helper(arg)
             btint[i] = btint[1]
         end
     end
-    layerstable = {}
+    local layerstable = {}
+    local cx = (x-1)/2
+    local cy = (y-1)/2
     local i = 1
     for char in string.gmatch(chars,'([^,]+)') do
-        xcord=(i-1)%x - 1 + offx
-        ycord=math.floor((i-1)/x) - 1 + offy
-        if x%2 == 0 then xcord = xcord + 0.5 end
-        if y%2 == 0 then ycord = ycord + 0.5 end
-        if x == 1 then xcord = xcord + 1 end
-        if y == 1 then ycord = ycord + 1 end
-        if x == 4 then xcord = xcord - 1 end
-        if y == 4 then ycord = ycord - 1 end
-        if x == 5 then xcord = xcord - 1 end
-        if y == 5 then ycord = ycord - 1 end
-        if x == 9 then xcord = xcord - 3 end
-        if y == 9 then ycord = ycord - 3 end
-        if x == 11 then xcord = xcord - 4 end
-        if y == 11 then ycord = ycord - 4 end
+        local xcord=(i-1)%x - cx + offx
+        local ycord=math.floor((i-1)/x) - cy + offy - offz
         if char == " " then char = "≞" end
         if b == " " then b = "≞" end
         layerstable[i*2-1] =   {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. b .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
@@ -1849,8 +1840,8 @@ data.raw["rail-chain-signal"]["rail-chain-signal"].ground_picture_set.signal_col
 data.raw["corpse"]["rail-chain-signal-remnants"].animation={layers=helper{chars="🚦",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
 
-data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,w,w,w,w,w,w,w,w,w,w",x=6,y=2,offx=-2,offy=-0.5}}}
-data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=6,y=2,offx=-2,offy=-0.5,ftint={{r=1,g=0.3,b=0.5}}}}
+data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,w,w,w,w,w,w,w,w,w,w",x=6,y=2,offz=1}}}
+data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=6,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
 
 
 data.raw["fish"]["fish"].pictures={sheet={layers=helper{chars="🐟",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}}
