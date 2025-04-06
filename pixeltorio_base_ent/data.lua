@@ -1955,7 +1955,9 @@ data.raw["cargo-wagon"]["cargo-wagon"].vertical_doors={layers=helper{chars="w,w,
 data.raw["cargo-wagon"]["cargo-wagon"].horizontal_doors={layers=helper{chars="w,━,━,━,━,w,w,━,━,━,━,w",x=6,y=2,offz=1,apply_runtime_tint=true}}
 data.raw["cargo-wagon"]["cargo-wagon"].wheels=train_wheels
 data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=2,y=6,ftint={{r=1,g=0.3,b=0.5}}}}
-
+-- I don't love how the fluid tanks look under rotation, so it might be worth adding support for "sub-sprites" that skew together uniformly for a more rigid appearance
+data.raw["fluid-wagon"]["fluid-wagon"].pictures={rotated={layers=helper{chars="◜,◝,◟,◞,◜,◝,◟,◞,◜,◝,◟,◞",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
+data.raw["fluid-wagon"]["fluid-wagon"].wheels=train_wheels
 
 data.raw["fish"]["fish"].pictures={sheet={layers=helper{chars="🐟",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}}
 
