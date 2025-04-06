@@ -127,16 +127,46 @@ local function helper(arg)
         end
     end
     local layerstable = {}
-    local cx = (x-1)/2
-    local cy = (y-1)/2
+    offx = offx - (x-1)/2
+    offy = offy - (y-1)/2
     local i = 1
     for char in string.gmatch(chars,'([^,]+)') do
-        local xcord=(i-1)%x - cx + offx
-        local ycord=math.floor((i-1)/x) - cy + offy - offz
+        local xcord=(i-1)%x + offx
+        local ycord=math.floor((i-1)/x) + offy
         if char == " " then char = "≞" end
         if b == " " then b = "≞" end
-        layerstable[i*2-1] =   {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. b .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
-        layerstable[i*2] = {filename = "__pixeltorio_base_ent__/graphics/tileset/" .. char .. ".png",width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift={xcord,ycord},variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180,apply_runtime_tint=arg.apply_runtime_tint}
+        -- individual filenames and shifts for each rotation frame
+        local filename_bg, filename, shift
+        local filenames_bg, filenames, frames = {}, {}, {}
+        for j=1,dir do
+            local o = (j-1)/dir
+            filenames_bg[j] = "__pixeltorio_base_ent__/graphics/tileset/" .. rotated_glyph(b, o) .. ".png"
+            filenames[j] = "__pixeltorio_base_ent__/graphics/tileset/" .. rotated_glyph(char, o) .. ".png"
+            local fshift = rotated_shift({ xcord, ycord }, o)
+            fshift[2] = fshift[2] - offz
+            frames[j] = {
+                shift = fshift,
+                x = 0, y = 0, -- All sprites are single frames
+            }
+        end
+        if dir == 1 then
+            filename_bg = filenames_bg[1]
+            filename = filenames[1]
+            shift = frames[1].shift
+            filenames_bg = nil
+            filenames = nil
+            frames = nil
+        end
+        layerstable[i*2-1] =   {filename=filename_bg,filenames=filenames_bg,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
+        layerstable[i*2] = {filename=filename,filenames=filenames,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180,apply_runtime_tint=arg.apply_runtime_tint}
+        -- Individual sprite graphics
+        layerstable[i*2-1].lines_per_file = 1
+        layerstable[i*2-1].line_length = 1
+        layerstable[i*2].lines_per_file = 1
+        layerstable[i*2].line_length = 1
+        -- Thanks to a more enlightened approach to asset creation, these sprites do not suffer from the usual flaws introduced by 3D rendering software
+        layerstable[i*2-1].apply_projection = false
+        layerstable[i*2].apply_projection = false
         i=i+1
     end
     return layerstable
@@ -1918,13 +1948,13 @@ data.raw["rail-chain-signal"]["rail-chain-signal"].ground_picture_set.signal_col
 data.raw["corpse"]["rail-chain-signal-remnants"].animation={layers=helper{chars="🚦",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
 local train_wheels = {rotated={layers=helper{chars="━,━,└,┘",x=2,y=2}}}
-data.raw["locomotive"]["locomotive"].pictures={rotated={layers=helper{chars="━,━,━,━,━,╲,━,━,━,━,━,╱",x=6,y=2,offz=1,apply_runtime_tint=true}}}
+data.raw["locomotive"]["locomotive"].pictures={rotated={layers=helper{chars="╱,╲,┃,┃,┃,┃,┃,┃,┃,┃,┃,┃",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
 data.raw["locomotive"]["locomotive"].wheels=train_wheels
-data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="W,W,W,W,W,W,W,W,W,W,W,W",x=6,y=2,offz=1,apply_runtime_tint=true}}}
-data.raw["cargo-wagon"]["cargo-wagon"].vertical_doors={layers=helper{chars="W,W,w,w,w,w,w,w,w,w,W,W",x=2,y=6,offz=1,apply_runtime_tint=true}}
-data.raw["cargo-wagon"]["cargo-wagon"].horizontal_doors={layers=helper{chars="W,w,w,w,w,W,W,w,w,w,w,W",x=6,y=2,offz=1,apply_runtime_tint=true}}
+data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,W,W,W,W,W,W,W,W,w,w",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
+data.raw["cargo-wagon"]["cargo-wagon"].vertical_doors={layers=helper{chars="w,w,┃,┃,┃,┃,┃,┃,┃,┃,w,w",x=2,y=6,offz=1,apply_runtime_tint=true}}
+data.raw["cargo-wagon"]["cargo-wagon"].horizontal_doors={layers=helper{chars="w,━,━,━,━,w,w,━,━,━,━,w",x=6,y=2,offz=1,apply_runtime_tint=true}}
 data.raw["cargo-wagon"]["cargo-wagon"].wheels=train_wheels
-data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=6,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
+data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=2,y=6,ftint={{r=1,g=0.3,b=0.5}}}}
 
 
 data.raw["fish"]["fish"].pictures={sheet={layers=helper{chars="🐟",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}}
