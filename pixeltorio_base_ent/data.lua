@@ -98,7 +98,7 @@ local function rotated_shift(shift, o)
 end
 
 local function helper(arg)
-    local chars,ftint,x,y,btint,b,offx,offy,offz,var,dir,fram,linlen,cwidth,cheight,cres = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.offz,arg.var,arg.dir,arg.fram,arg.linlen,arg.cwidth,arg.cheight,arg.cres
+    local chars,ftint,x,y,btint,b,offx,offy,offz,var,dir,fram,linlen,cwidth,cheight,cres,canimlen = arg.chars,arg.ftint,arg.x,arg.y,arg.btint,arg.b,arg.offx,arg.offy,arg.offz,arg.var,arg.dir,arg.fram,arg.linlen,arg.cwidth,arg.cheight,arg.cres,arg.canimlen
 
 
     if chars == nil then chars = "a," end
@@ -117,6 +117,7 @@ local function helper(arg)
     if cwidth == nil then cwidth = 1 end
     if cheight == nil then cheight = 1 end
     if cres == nil then cres = resolution end
+    if canimlen == nil then canimlen = 1 end
     local allen = x*y
     if #chars == 2 then chars = string.rep(chars,allen) end
     if #ftint == 1 then
@@ -145,7 +146,7 @@ local function helper(arg)
             local o = (j-1)/dir
             filenames_bg[j] = "__pixeltorio_base_ent__/graphics/tileset/" .. rotated_glyph(b, o) .. ".png"
             filenames[j] = "__pixeltorio_base_ent__/graphics/tileset/" .. rotated_glyph(char, o) .. ".png"
-            local fshift = rotated_shift({ xcord, ycord }, o)
+            local fshift = rotated_shift({ xcord*resolution/cres, ycord*resolution/cres }, o)
             fshift[2] = fshift[2] - offz
             frames[j] = {
                 shift = fshift,
@@ -160,8 +161,8 @@ local function helper(arg)
             filenames = nil
             frames = nil
         end
-        layerstable[i*2-1] =   {filename=filename_bg,filenames=filenames_bg,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180}
-        layerstable[i*2] = {filename=filename,filenames=filenames,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/180,apply_runtime_tint=arg.apply_runtime_tint}
+        layerstable[i*2-1] =   {filename=filename_bg,filenames=filenames_bg,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=btint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/(60*canimlen)}
+        layerstable[i*2] = {filename=filename,filenames=filenames,frames=frames,width=resolution*cwidth,height=resolution*cheight,scale=32/cres,tint=ftint[i],shift=shift,variation_count=var,direction_count=dir,frame_count=fram,priority="extra-high-no-scale",animation_speed=1/(60*canimlen),apply_runtime_tint=arg.apply_runtime_tint}
         -- Individual sprite graphics
         layerstable[i*2-1].lines_per_file = 1
         layerstable[i*2-1].line_length = linlen
@@ -1151,7 +1152,7 @@ for treename,treetable in pairs(data.raw["tree"]) do
         treetable.variation_weights=nil
         counter_a=counter_a+1
     else
-        treetable.pictures={layers=helper{chars="≞,≞,╱,╱",x=2,y=2,offy=-1,ftint={color_for_dead_trees[counter_b]},btint={{r=0,g=0,b=0,a=0}}}}
+        treetable.pictures={layers=helper{chars="╱,╱",x=2,y=1,ftint={color_for_dead_trees[counter_b]},btint={{r=0,g=0,b=0,a=0}}}}
         treetable.variations=nil
         treetable.variation_weights=nil
         counter_b=counter_b+1
@@ -1297,6 +1298,64 @@ data.raw["corpse"]["medium-scorchmark"].ground_patch_higher={layers=helper{chars
 data.raw["corpse"]["small-scorchmark"].ground_patch_higher={layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
 
 
+
+
+
+for explosionname,explosiontable in pairs(data.raw["explosion"]) do
+    if string.find(explosionname,".*-.*") ~= nil then --we will first make all explosions generic then change a few ones
+        explosiontable.animations={
+            sheets={
+                helper{chars="💥",x=1,y=1,cres=16,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+                helper{chars="💥",x=1,y=1,cres=32,ftint={{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+            }
+        }
+    end
+end
+
+for explosionname,explosiontable in pairs(data.raw["explosion"]) do
+    if string.find(explosionname,".*die.*") ~= nil then --Enemy death animations
+        explosiontable.animations={
+            sheets={
+                helper{chars="☠",x=1,y=1,canimlen=0.125,ftint={{r=0.5,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+            }
+        }
+    end
+end
+
+
+
+data.raw["explosion"]["spark-explosion"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=64,canimlen=0.25,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
+data.raw["explosion"]["spark-explosion-higher"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=64,canimlen=0.25,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
+data.raw["explosion"]["enemy-damaged-explosion"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=64,canimlen=0.25,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
+data.raw["explosion"]["explosion-gunshot"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=96,canimlen=0.25,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
+data.raw["explosion"]["explosion-gunshot-small"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=64,canimlen=0.25,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
+data.raw["explosion"]["explosion-hit"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=64,canimlen=0.25,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
+
+
 data.raw["explosion"]["nuke-explosion"].animations={
     sheets={
         helper{chars="💥",x=1,y=1,cres=4,ftint={{r=1,g=0.6,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
@@ -1313,8 +1372,27 @@ data.raw["explosion"]["big-artillery-explosion"].animations={
     }
 }
 
+data.raw["explosion"]["massive-explosion"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=6,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+        helper{chars="💥",x=1,y=1,cres=12,ftint={{r=1,g=0.75,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+        helper{chars="💥",x=1,y=1,cres=24,ftint={{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
 
+data.raw["explosion"]["nuclear-reactor-explosion"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=16,ftint={{r=0.5,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+        helper{chars="💥",x=1,y=1,cres=32,ftint={{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
 
+data.raw["explosion"]["uranium-cannon-shell-explosion"].animations={
+    sheets={
+        helper{chars="💥",x=1,y=1,cres=16,ftint={{r=0.5,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+        helper{chars="💥",x=1,y=1,cres=32,ftint={{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}[2],
+    }
+}
 
 
 data.raw["transport-belt"]["transport-belt"].belt_animation_set={
@@ -1992,17 +2070,36 @@ data.raw["rail-chain-signal"]["rail-chain-signal"].ground_picture_set.signal_col
 
 data.raw["corpse"]["rail-chain-signal-remnants"].animation={layers=helper{chars="🚦",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
-local train_wheels = {rotated={layers=helper{chars="━,━,└,┘",x=2,y=2}}}
-data.raw["locomotive"]["locomotive"].pictures={rotated={layers=helper{chars="╱,╲,┃,┃,┃,┃,┃,┃,┃,┃,┃,┃",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
+local train_wheels = {rotated={layers=helper{chars="└,┘",x=2,y=1,btint={{r=0,g=0,b=0,a=0}}}}}
+data.raw["locomotive"]["locomotive"].pictures={rotated={layers=helper{chars="╱,╲,┃,┃,┃,┃,┃,┃,┃,┃,┃,┃",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}}
 data.raw["locomotive"]["locomotive"].wheels=train_wheels
-data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,W,W,W,W,W,W,W,W,w,w",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
-data.raw["cargo-wagon"]["cargo-wagon"].vertical_doors={layers=helper{chars="w,w,┃,┃,┃,┃,┃,┃,┃,┃,w,w",x=2,y=6,offz=1,apply_runtime_tint=true}}
-data.raw["cargo-wagon"]["cargo-wagon"].horizontal_doors={layers=helper{chars="w,━,━,━,━,w,w,━,━,━,━,w",x=6,y=2,offz=1,apply_runtime_tint=true}}
+data.raw["corpse"]["locomotive-remnants"].animation={layers=helper{chars="🚆,l,l,l,l,l,∅,∅,∅,∅,∅,∅",x=6,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
+
+
+
+data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,W,W,W,W,W,W,W,W,w,w",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}}
+data.raw["cargo-wagon"]["cargo-wagon"].vertical_doors={layers=helper{chars="w,w,┃,┃,┃,┃,┃,┃,┃,┃,w,w",x=2,y=6,offz=1,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["cargo-wagon"]["cargo-wagon"].horizontal_doors={layers=helper{chars="w,━,━,━,━,w,w,━,━,━,━,w",x=6,y=2,offz=1,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["cargo-wagon"]["cargo-wagon"].wheels=train_wheels
-data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="w,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=2,y=6,ftint={{r=1,g=0.3,b=0.5}}}}
+data.raw["corpse"]["cargo-wagon-remnants"].animation={layers=helper{chars="🚆,w,w,w,w,w,∅,∅,∅,∅,∅,∅",x=6,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
 -- I don't love how the fluid tanks look under rotation, so it might be worth adding support for "sub-sprites" that skew together uniformly for a more rigid appearance
-data.raw["fluid-wagon"]["fluid-wagon"].pictures={rotated={layers=helper{chars="◜,◝,◟,◞,◜,◝,◟,◞,◜,◝,◟,◞",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true}}}
+
+
+data.raw["infinity-cargo-wagon"]["infinity-cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,W,W,W,W,W,W,W,W,w,w",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}}
+data.raw["infinity-cargo-wagon"]["infinity-cargo-wagon"].vertical_doors={layers=helper{chars="w,w,┃,┃,┃,┃,┃,┃,┃,┃,w,w",x=2,y=6,offz=1,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["infinity-cargo-wagon"]["infinity-cargo-wagon"].horizontal_doors={layers=helper{chars="w,━,━,━,━,w,w,━,━,━,━,w",x=6,y=2,offz=1,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["infinity-cargo-wagon"]["infinity-cargo-wagon"].wheels=train_wheels
+
+data.raw["fluid-wagon"]["fluid-wagon"].pictures={rotated={layers=helper{chars="◜,◝,◟,◞,◜,◝,◟,◞,◜,◝,◟,◞",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}}
 data.raw["fluid-wagon"]["fluid-wagon"].wheels=train_wheels
+data.raw["corpse"]["fluid-wagon-remnants"].animation={layers=helper{chars="🚆,◜,◝,w,◜,◝,∅,◟,◞,∅,◟,◞",x=6,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
+
+
+data.raw["artillery-wagon"]["artillery-wagon"].cannon_base_pictures={rotated={layers=helper{chars="━,━,┃,┃,┃,┃,◜,◝,◟,◞,━,━",x=2,y=6,offz=0,dir=36,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}}--offy=2,offx=1
+data.raw["artillery-wagon"]["artillery-wagon"].pictures=nil
+data.raw["artillery-wagon"]["artillery-wagon"].wheels=train_wheels
+data.raw["artillery-wagon"]["artillery-wagon"].cannon_barrel_pictures={rotated={layers=helper{chars="∦,∦",x=1,y=2,offy=-1,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}}
+
 
 data.raw["fish"]["fish"].pictures={sheet={layers=helper{chars="🐟",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}}
 
@@ -2062,7 +2159,7 @@ data.raw["tile"]["water-green"].variants={
         picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
-data.raw["tile"]["water-green"].tint={r=0.5,g=1,b=1,a=1}
+data.raw["tile"]["water-green"].tint={r=0.5,g=1,b=0.7,a=1}
 data.raw["tile"]["water-green"].effect=nil
 
 
@@ -2082,7 +2179,7 @@ data.raw["tile"]["deepwater-green"].variants={
         picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
-data.raw["tile"]["deepwater-green"].tint={r=0.3,g=1,b=1,a=1}
+data.raw["tile"]["deepwater-green"].tint={r=0.3,g=1,b=0.5,a=1}
 data.raw["tile"]["deepwater-green"].effect=nil
 
 
@@ -2121,7 +2218,7 @@ data.raw["tile"]["water-mud"].variants={
         picture="__pixeltorio_base_ent__/graphics/tileset/" .. "≈" .. ".png"
     }
 }
-data.raw["tile"]["water-mud"].tint={r=0.5,g=0.6,b=0.8}
+data.raw["tile"]["water-mud"].tint={r=0.5,g=0.8,b=0.6}
 data.raw["tile"]["water-mud"].effect=nil
 
 dirtcount=1
@@ -2261,8 +2358,8 @@ data.raw["tile"]["water-wube"].variants={
         picture="__pixeltorio_base_ent__/graphics/tileset/" .. "wubewater" .. ".png"
         }
     },
-    material_texture_width_in_tiles=3,
-    material_texture_height_in_tiles=3,
+    material_texture_width_in_tiles=8,
+    material_texture_height_in_tiles=8,
     material_background={
         count=1,
         picture="__pixeltorio_base_ent__/graphics/tileset/" .. "wubewater" .. ".png"
@@ -2310,6 +2407,88 @@ data.raw["tile"]["landfill"].variants={
 }
 data.raw["tile"]["landfill"].tint={r=0.2,g=0.2,b=0}
 data.raw["tile"]["landfill"].effect=nil
+
+
+data.raw["tile"]["tutorial-grid"].variants={
+    empty_transitions=true,
+    main={
+        {
+        size=1,
+        count=1,
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        }
+    },
+    material_texture_width_in_tiles=1,
+    material_texture_height_in_tiles=1,
+    material_background={
+        count=1,
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+    }
+}
+data.raw["tile"]["tutorial-grid"].tint={r=0.75,g=0.75,b=0.75}
+data.raw["tile"]["tutorial-grid"].effect=nil
+
+data.raw["tile"]["lab-dark-1"].variants={
+    empty_transitions=true,
+    main={
+        {
+        size=1,
+        count=1,
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        }
+    },
+    material_texture_width_in_tiles=1,
+    material_texture_height_in_tiles=1,
+    material_background={
+        count=1,
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+    }
+}
+data.raw["tile"]["lab-dark-1"].tint={r=0.25,g=0.25,b=0.25}
+data.raw["tile"]["lab-dark-1"].effect=nil
+
+data.raw["tile"]["lab-dark-2"].variants={
+    empty_transitions=true,
+    main={
+        {
+        size=1,
+        count=1,
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        }
+    },
+    material_texture_width_in_tiles=1,
+    material_texture_height_in_tiles=1,
+    material_background={
+        count=1,
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+    }
+}
+data.raw["tile"]["lab-dark-2"].tint={r=0.5,g=0.5,b=0.5}
+data.raw["tile"]["lab-dark-2"].effect=nil
+
+
+
+data.raw["tile"]["lab-white"].variants={
+    empty_transitions=true,
+    main={
+        {
+        size=1,
+        count=1,
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        }
+    },
+    material_texture_width_in_tiles=1,
+    material_texture_height_in_tiles=1,
+    material_background={
+        count=1,
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+    }
+}
+data.raw["tile"]["lab-white"].tint={r=1,g=1,b=1}
+data.raw["tile"]["lab-white"].effect=nil
+
+
+
 
 
 data.raw["tile"]["concrete"].variants={
@@ -2681,9 +2860,9 @@ end
 
 
 
-data.raw["container"]["factorio-logo-11tiles"].picture={layers=helper{chars="P,i,x,e,l,t,o,r,i,⚙,8",x=11,y=1,ftint={{r=1,g=0.5,b=0}}}}
-
-
+data.raw["container"]["factorio-logo-11tiles"].picture={layers=helper{chars="P,i,x,e,l,t,o,r,i,⚙,8,┗,━,━,━,━,━,━,━,━,━,┛",x=11,y=2,ftint={{r=1,g=0.5,b=0}}}}
+data.raw["container"]["factorio-logo-16tiles"].picture={layers=helper{chars="┏,~,P,i,x,e,l,t,o,r,i,⚙,~,8,~,┓,┗,━,━,━,━,━,━,━,━,━,━,━,━,━,━,┛",x=16,y=2,ftint={{r=1,g=0.5,b=0}}}}
+data.raw["container"]["factorio-logo-22tiles"].picture={layers=helper{chars="┏,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,┓,┃,~,~,~,~,P,i,x,e,l,t,o,r,i,⚙,~,8,~,~,~,~,┃,┗,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,━,┛",x=22,y=3,ftint={{r=1,g=0.5,b=0}}}}
 
 
 for particlename,particletable in pairs(data.raw["optimized-particle"]) do
@@ -2730,6 +2909,13 @@ data.raw["projectile"]["uranium-cannon-projectile"].animation={layers=helper{cha
 
 data.raw["projectile"]["shotgun-pellet"].animation={layers=helper{chars="·",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["projectile"]["piercing-shotgun-pellet"].animation={layers=helper{chars="·",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+
+
+data.raw["artillery-flare"]["artillery-flare"].pictures={sheets=helper{chars="⯐",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}},cres=8}}
+
+data.raw["artillery-projectile"]["artillery-projectile"].picture={layers=helper{chars="💣",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}}
+
+
 
 
 data.raw["car"]["car"].animation={layers=helper{chars="C,C,☸,☸",x=2,y=2,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}}
@@ -2830,17 +3016,25 @@ data.raw["infinity-pipe"]["infinity-pipe"].fluid_box.pipe_covers=nil
 
 
 data.raw["programmable-speaker"]["programmable-speaker"].sprite={layers=helper{chars="🔊",x=1,y=1}} 
+data.raw["corpse"]["programmable-speaker-remnants"].animation={layers=helper{chars="🔊",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
+data.raw["corpse"]["programmable-speaker-remnants"].animation_overlay=nil
+
 data.raw["display-panel"]["display-panel"].sprites={
     north={layers=helper{chars="📺",x=1,y=1,offy=-0.25}},
     south={layers=helper{chars="📺",x=1,y=1,offy=-0.25}},
     east={layers=helper{chars="📺",x=1,y=1,offy=-0.25}},
     west={layers=helper{chars="📺",x=1,y=1,offy=-0.25}}
 }
+data.raw["corpse"]["display-panel-remnants"].animation={layers=helper{chars="📺",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
 data.raw["power-switch"]["power-switch"].power_on_animation={layers=helper{chars="⚡,⚡,1,2",x=2,y=2}}
 
 data.raw["power-switch"]["power-switch"].led_off={layers=helper{chars="∥",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["power-switch"]["power-switch"].led_on={layers=helper{chars="━",x=1,y=1,ftint={{r=0.5,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["power-switch-remnants"].animation={layers=helper{chars="⚡,⚡,∅,∅",x=2,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
+
+
+
 
 data.raw["infinity-container"]["infinity-chest"].picture={layers=helper{chars="☑",x=1,y=1,ftint={{r=1,g=0.5,b=1}}}}
 
@@ -2856,6 +3050,7 @@ data.raw["constant-combinator"]["constant-combinator"].sprites={
     east={layers=helper{chars="㏄",x=1,y=1,ftint={{r=0.5,g=1,b=1}}}},
     west={layers=helper{chars="㏄",x=1,y=1,ftint={{r=0.5,g=1,b=1}}}}
 }
+data.raw["corpse"]["constant-combinator-remnants"].animation={layers=helper{chars="㏄",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
 data.raw["selector-combinator"]["selector-combinator"].max_symbol_sprites={
     north={layers=helper{chars="⭷,Ⓒ",x=1,y=2,ftint={{r=0.5,g=1,b=1}}}},
@@ -2905,6 +3100,7 @@ data.raw["selector-combinator"]["selector-combinator"].sprites={
     east={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
     west={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
 }
+data.raw["corpse"]["selector-combinator-remnants"].animation={layers=helper{chars="⭷",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
 
 data.raw["arithmetic-combinator"]["arithmetic-combinator"].plus_symbol_sprites={
@@ -2979,7 +3175,7 @@ data.raw["arithmetic-combinator"]["arithmetic-combinator"].sprites={
     east={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
     west={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
 }
-
+data.raw["corpse"]["arithmetic-combinator-remnants"].animation={layers=helper{chars="+",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
 
 data.raw["decider-combinator"]["decider-combinator"].equal_symbol_sprites={
@@ -3024,7 +3220,7 @@ data.raw["decider-combinator"]["decider-combinator"].sprites={
     east={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}},
     west={layers=helper{chars="Ⓒ,Ⓒ",x=2,y=1,ftint={{r=0.5,g=1,b=1}}}}
 }
-
+data.raw["corpse"]["decider-combinator-remnants"].animation={layers=helper{chars="=",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
 
 
 
@@ -3331,7 +3527,411 @@ data.raw["container"]["red-chest"].picture={layers=helper{chars="☑",x=1,y=1,ft
 
 data.raw["linked-container"]["linked-chest"].picture={layers=helper{chars="☑",x=1,y=1,ftint={{r=1,g=1,b=1}}}}
 data.raw["proxy-container"]["proxy-container"].picture={layers=helper{chars="☑",x=1,y=1,ftint={{r=1,g=1,b=1}}}}
+data.raw["temporary-container"]["cargo-pod-container"].picture={layers=helper{chars="☐,┃,⩚",x=1,y=3,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}}
+
+data.raw["corpse"]["cargo-pod-container-remnants"].animation={layers=helper{chars="☐,≞,≞,≞,╲,≞,≞,≞,⩚",ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 
 
 data.raw["utility-sprites"]["default"].shoot_cursor_green={layers=helper{chars="⯐",x=1,y=1,ftint={{r=0.5,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["utility-sprites"]["default"].shoot_cursor_red={layers=helper{chars="⯐",x=1,y=1,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}},cres=8}}
+
+
+data.raw["cargo-pod"]["cargo-pod"].default_graphic={
+    type="pod-catalogue",
+    animation={
+        layers=helper{chars="1,2,3",x=1,y=3,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}
+    },
+    catalogue_id=1
+}
+data.raw["cargo-pod"]["cargo-pod"].procession_graphic_catalogue={
+    {
+        index=0, --static   - didn't test
+        animation={
+            layers=helper{chars="☐,┃,⩚",x=1,y=3,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=1, --static attached  - most of the animation
+        animation={
+            layers=helper{chars="☐,┃,┃",x=1,y=3,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=2, -- static emission
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=4, --open - didn't see
+        animation={
+            layers=helper{chars="☐,┃,⩛",x=1,y=3,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=5, -- open emission
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=6, --shadow
+        animation={
+            layers=helper{chars="≞",x=1,y=1,btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=7, --closed rotation - in the animation
+        animation={
+            layers=helper{chars="☐,┃,⩛",x=1,y=3,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=8, --closed rotation emission
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=9, --opening  - didn't see
+        animation={
+            layers=helper{chars="☐,┃,⩛",x=1,y=3,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=11, --open rotation  - didn't see it
+        animation={
+            layers=helper{chars="☐,┃,⩛",x=1,y=3,ftint={{r=1,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=12, --rotation emission
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=13, --landing,
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=14, --landing emission
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=100, -- rocket opening base
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=101, -- rocket opening front
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=102, -- rocket opening back
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    { 
+        index=120, --rocket over glare
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=121, --rocket static emission
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=122, --rocket jet
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=123, -- rocket backblast back
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=124, --rocket backblast front
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=140, --rocket backblast front
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=141, --rocket backblast front
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=142, --rocket backblast front
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=143, --rocket backblast front
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=144, --rocket backblast front
+        animation={
+            layers=helper{chars="🚀,🔥",x=1,y=2,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=200, --thruster loop
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=201, --thruster ignition
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+    {
+        index=202, --open reentry flame
+        animation={
+            layers=helper{chars="≞,≞,≞,🔥",x=1,y=4,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}
+        }
+    },
+
+}
+
+
+for railname,railtable in pairs(data.raw["straight-rail"]["straight-rail"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["straight-rail"]["straight-rail"].pictures[railname]=nil
+        end
+    end
+end
+
+
+for railname,railtable in pairs(data.raw["half-diagonal-rail"]["half-diagonal-rail"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["half-diagonal-rail"]["half-diagonal-rail"].pictures[railname]=nil
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["curved-rail-a"]["curved-rail-a"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["curved-rail-a"]["curved-rail-a"].pictures[railname]=nil
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["curved-rail-b"]["curved-rail-b"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["curved-rail-b"]["curved-rail-b"].pictures[railname]=nil
+        end
+    end
+end
+
+
+
+
+
+
+for railname,railtable in pairs(data.raw["elevated-straight-rail"]["dummy-elevated-straight-rail"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["elevated-straight-rail"]["dummy-elevated-straight-rail"].pictures[railname]=nil
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["elevated-half-diagonal-rail"]["dummy-elevated-half-diagonal-rail"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["elevated-half-diagonal-rail"]["dummy-elevated-half-diagonal-rail"].pictures[railname]=nil
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["elevated-curved-rail-a"]["dummy-elevated-curved-rail-a"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["elevated-curved-rail-a"]["dummy-elevated-curved-rail-a"].pictures[railname]=nil
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["elevated-curved-rail-b"]["dummy-elevated-curved-rail-b"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then --the table isn't named metals
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["elevated-curved-rail-b"]["dummy-elevated-curved-rail-b"].pictures[railname]=nil
+        end
+    end
+end
+
+
+for railname,railtable in pairs(data.raw["legacy-curved-rail"]["legacy-curved-rail"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["legacy-curved-rail"]["legacy-curved-rail"].pictures[railname]=nil
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["legacy-straight-rail"]["legacy-straight-rail"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["legacy-straight-rail"]["legacy-straight-rail"].pictures[railname]=nil
+        end
+    end
+end
+
+for corpserailname,corpserailtable in pairs(data.raw["rail-remnants"]) do
+    for railname,railtable in pairs(corpserailtable.pictures) do
+        if type(railtable) == "table" then --make sure its a table
+            for subrailname,subrailtable in pairs(railtable) do
+                if type(subrailtable) == "table" then
+                    if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*ties.*") ~= nil) or (string.find(subrailname,".*plates.*") ~= nil) or (string.find(subrailname,".*metals.*") ~= nil) then 
+                        subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                        subrailtable.x=0
+                        subrailtable.y=0
+                    end
+                end  
+            end
+            if string.find(railname,".*endings.*") ~= nil then
+                data.raw["straight-rail"]["straight-rail"].pictures[railname]=nil
+            end
+        end
+    end
+end
+
+
+
+
+
+
+
+
+data.raw["planet"]["nauvis"].surface_render_parameters.clouds.shape_noise_texture={
+    filename="__pixeltorio_base_ent__/graphics/tileset/" .. "🌁" .. ".png",
+    size={32,32}
+}
+data.raw["planet"]["nauvis"].surface_render_parameters.clouds.detail_noise_texture={
+    filename="__pixeltorio_base_ent__/graphics/tileset/" .. "🌫" .. ".png",
+    size={32,32}
+}
+data.raw["planet"]["nauvis"].surface_render_parameters.clouds.scale=0.125
+data.raw["planet"]["nauvis"].surface_render_parameters.clouds.movement_speed_multiplier=0.75*1/8
