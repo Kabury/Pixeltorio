@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+Date: 07. 04. 2025
+  Major features:
+    - Adapted rolling stock to ASCII (by noodlebox)
+    - Adapted temp rails
+  Minor features:
+    - Fixed accumulator animation
+    - Added cargo-pod precession, combinators, speaker, display, clouds, explosions
+    - Added editor entities (loaders, infinity objects, etc.)
+    - Removed tile transitions
+---------------------------------------------------------------------------------------------------
 Version: 0.1.1
 Date: 05. 04. 2025
   Hotfix:
