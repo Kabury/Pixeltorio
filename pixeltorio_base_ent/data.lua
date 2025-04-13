@@ -876,13 +876,38 @@ data.raw["corpse"]["pumpjack-remnants"].animation={layers=helper{chars="∅,∅,
 
 
 data.raw["rocket-silo"]["rocket-silo"].base_day_sprite={
-layers=helper{chars="r,r,r,╱,─,╲,r,r,r,r,r,┌,⡪,⡪,⡪,┐,r,r,r,┌,⡪,⡪,⡪,⡪,⡪,┐,r,╱,⡪,⡪,⡪,⡪,⡪,⡪,⡪,╲,│,⡪,⡪,⡪,⡪,⡪,⡪,⡪,│,╲,⡪,⡪,⡪,⡪,⡪,⡪,⡪,╱,r,└,⡪,⡪,⡪,⡪,⡪,┘,r,r,r,└,⡪,⡪,⡪,┘,r,r,r,r,r,╲,─,╱,r,r,r",x=9,y=9}
+layers=helper{chars="r,r,r,╱,─,╲,r,r,r,\z
+                     r,r,┌,⡪,⡪,⡪,┐,r,r,\z
+                     r,┌,⡪,⡪,⡪,⡪,⡪,┐,r,\z
+                     ╱,⡪,⡪,⡪,⡪,⡪,⡪,⡪,╲,\z
+                     │,⡪,⡪,⡪,🚀,⡪,⡪,⡪,│,\z
+                     ╲,⡪,⡪,⡪,⡪,⡪,⡪,⡪,╱,\z
+                     r,└,⡪,⡪,⡪,⡪,⡪,┘,r,\z
+                     r,r,└,⡪,⡪,⡪,┘,r,r,\z
+                     r,r,r,╲,─,╱,r,r,r",x=9,y=9}
 }
 
 data.raw["rocket-silo"]["rocket-silo"].base_night_sprite={
-    layers=helper{chars="r,r,r,╱,─,╲,r,r,r,r,r,┌,≞,≞,≞,┐,r,r,r,┌,≞,≞,≞,≞,≞,┐,r,╱,≞,≞,≞,≞,≞,≞,≞,╲,│,≞,≞,≞,≞,≞,≞,≞,│,╲,≞,≞,≞,≞,≞,≞,≞,╱,r,└,≞,≞,≞,≞,≞,┘,r,r,r,└,≞,≞,≞,┘,r,r,r,r,r,╲,─,╱,r,r,r",x=9,y=9}
+    layers=helper{chars="r,r,r,╱,─,╲,r,r,r,\z
+                         r,r,┌,≞,≞,≞,┐,r,r,\z
+                         r,┌,≞,≞,≞,≞,≞,┐,r,\z
+                         ╱,≞,≞,≞,≞,≞,≞,≞,╲,\z
+                         │,≞,≞,≞,🚀,≞,≞,≞,│,\z
+                         ╲,≞,≞,≞,≞,≞,≞,≞,╱,\z
+                         r,└,≞,≞,≞,≞,≞,┘,r,\z
+                         r,r,└,≞,≞,≞,┘,r,r,\z
+                         r,r,r,╲,─,╱,r,r,r",x=9,y=9}
 }
-data.raw["corpse"]["rocket-silo-remnants"].animation={layers=helper{chars="∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,🚀,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅",x=9,y=9,ftint={{r=1,g=0.3,b=0.5}}}} --should improve this later
+data.raw["corpse"]["rocket-silo-remnants"].animation={layers=
+helper{chars="r,r,r,╱,─,╲,r,r,r,\z
+                         r,r,┌,∅,∅,∅,┐,r,r,\z
+                         r,┌,∅,∅,∅,∅,∅,┐,r,\z
+                         ╱,∅,∅,∅,∅,∅,∅,∅,╲,\z
+                         │,∅,∅,∅,🚀,∅,∅,∅,│,\z
+                         ╲,∅,∅,∅,∅,∅,∅,∅,╱,\z
+                         r,└,∅,∅,∅,∅,∅,┘,r,\z
+                         r,r,└,∅,∅,∅,┘,r,r,\z
+                         r,r,r,╲,─,╱,r,r,r",x=9,y=9,ftint={{r=1,g=0.3,b=0.5}}}} --should improve this later
 
 
 data.raw["rocket-silo"]["rocket-silo"].arm_01_back_animation=nil
@@ -896,6 +921,11 @@ data.raw["rocket-silo"]["rocket-silo"].red_lights_back_sprites=nil
 data.raw["rocket-silo"]["rocket-silo"].red_lights_front_sprites=nil
 data.raw["rocket-silo"]["rocket-silo"].satellite_animation=nil
 data.raw["rocket-silo"]["rocket-silo"].satellite_shadow_animation=nil
+data.raw["rocket-silo"]["rocket-silo"].door_front_sprite=nil
+data.raw["rocket-silo"]["rocket-silo"].door_back_sprite=nil
+data.raw["rocket-silo"]["rocket-silo"].rocket_glow_overlay_sprite=nil
+data.raw["rocket-silo"]["rocket-silo"].rocket_shadow_overlay_sprite=nil
+
 
 data.raw["boiler"]["boiler"].pictures={
     north={
@@ -2076,7 +2106,6 @@ data.raw["locomotive"]["locomotive"].wheels=train_wheels
 data.raw["corpse"]["locomotive-remnants"].animation={layers=helper{chars="🚆,l,l,l,l,l,∅,∅,∅,∅,∅,∅",x=6,y=2,ftint={{r=1,g=0.3,b=0.5}}}}
 
 
-
 data.raw["cargo-wagon"]["cargo-wagon"].pictures={rotated={layers=helper{chars="w,w,W,W,W,W,W,W,W,W,w,w",x=2,y=6,offz=1,dir=36,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}}
 data.raw["cargo-wagon"]["cargo-wagon"].vertical_doors={layers=helper{chars="w,w,┃,┃,┃,┃,┃,┃,┃,┃,w,w",x=2,y=6,offz=1,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}
 data.raw["cargo-wagon"]["cargo-wagon"].horizontal_doors={layers=helper{chars="w,━,━,━,━,w,w,━,━,━,━,w",x=6,y=2,offz=1,apply_runtime_tint=true,btint={{r=0,g=0,b=0,a=0}}}}
@@ -2415,14 +2444,14 @@ data.raw["tile"]["tutorial-grid"].variants={
         {
         size=1,
         count=1,
-        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
     }
 }
 data.raw["tile"]["tutorial-grid"].tint={r=0.75,g=0.75,b=0.75}
@@ -2434,14 +2463,14 @@ data.raw["tile"]["lab-dark-1"].variants={
         {
         size=1,
         count=1,
-        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
     }
 }
 data.raw["tile"]["lab-dark-1"].tint={r=0.25,g=0.25,b=0.25}
@@ -2453,14 +2482,14 @@ data.raw["tile"]["lab-dark-2"].variants={
         {
         size=1,
         count=1,
-        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
         }
     },
     material_texture_width_in_tiles=1,
     material_texture_height_in_tiles=1,
     material_background={
         count=1,
-        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "🙾" .. ".png"
+        picture="__pixeltorio_base_ent__/graphics/tileset/" .. "background" .. ".png"
     }
 }
 data.raw["tile"]["lab-dark-2"].tint={r=0.5,g=0.5,b=0.5}
@@ -3934,4 +3963,120 @@ data.raw["planet"]["nauvis"].surface_render_parameters.clouds.detail_noise_textu
     size={32,32}
 }
 data.raw["planet"]["nauvis"].surface_render_parameters.clouds.scale=0.125
-data.raw["planet"]["nauvis"].surface_render_parameters.clouds.movement_speed_multiplier=0.75*1/8
+data.raw["planet"]["nauvis"].surface_render_parameters.clouds.movement_speed_multiplier=0.75*1/8 --vanilla is 0.75
+
+
+data.raw["container"]["crash-site-spaceship"].picture={layers=helper{chars="∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,∅,\z
+                                                                            ∅,╱,─,─,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,∅,\z
+                                                                            ∅,O,≞,≞,╲,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,∅,\z
+                                                                            ∅,≞,╱,─,─,─,≞,─,≞,─,🔥,─,╲,≞,≞,∅,\z
+                                                                            ∅,≞,O,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,>,☐,∅,\z
+                                                                            ∅,≞,O,≞,≞,🔥,≞,≞,≞,≞,≞,≞,╱,🌁,≞,∅,\z
+                                                                            ∅,≞,╲,─,≞,─,─,─,─,≞,─,─,🌁,≞,≞,∅,\z
+                                                                            🌁,🌁,🌁,🌁,🌁,🌁,🌁,╱,🌁,🌁,🌁,🌁,🌁,🌁,🌁,🌁,\z
+                                                                            ≞,≞,≞,≞,≞,╱,─,≞,≞,≞,≞,≞,≞,≞,≞,≞",x=16,y=9,offx=-1,offy=0.5,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["container"]["crash-site-spaceship"].integration_patch=nil
+
+data.raw["container"]["crash-site-spaceship-wreck-big-1"].picture={layers=helper{chars="╲,─,╲,│,─,│",x=3,y=2,offy=0.5,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["container"]["crash-site-spaceship-wreck-big-1"].integration_patch=nil
+
+
+data.raw["container"]["crash-site-spaceship-wreck-big-2"].picture={layers=helper{chars="O,╲,≞,O,≞,╲,╲,─,│",offx=0,offy=0,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["container"]["crash-site-spaceship-wreck-big-2"].integration_patch=nil
+
+
+data.raw["container"]["crash-site-spaceship-wreck-medium-1"].picture={layers=helper{chars="╲,∥,╲,╲,∥,╲",x=3,y=2,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["container"]["crash-site-spaceship-wreck-medium-1"].integration_patch=nil
+
+data.raw["container"]["crash-site-spaceship-wreck-medium-2"].picture={layers=helper{chars="◜,◝,◟,◞",x=2,y=2,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["container"]["crash-site-spaceship-wreck-medium-2"].integration_patch=nil
+
+data.raw["container"]["crash-site-spaceship-wreck-medium-3"].picture={layers=helper{chars="╲,╲,>,│,╲,╲",x=2,y=3,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["container"]["crash-site-spaceship-wreck-medium-3"].integration_patch=nil
+
+
+
+
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-1"].picture={layers=helper{chars="∅",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-1"].integration_patch=nil
+
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-2"].picture={layers=helper{chars="∅",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-2"].integration_patch=nil
+
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-3"].picture={layers=helper{chars="∅",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-3"].integration_patch=nil
+
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-4"].picture={layers=helper{chars="∅",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-4"].integration_patch=nil
+
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-5"].picture={layers=helper{chars="∅",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-5"].integration_patch=nil
+
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-6"].picture={layers=helper{chars="∅",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["simple-entity-with-owner"]["crash-site-spaceship-wreck-small-6"].integration_patch=nil
+
+data.raw["character-corpse"]["character-corpse"].pictures={sheets=helper{chars="☠,@,⦯,☠",x=2,y=2,ftint={{r=1,g=0.3,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["character-corpse"]["character-corpse"].picture=nil
+data.raw["character-corpse"]["character-corpse"].armor_picture_mapping=nil
+
+
+
+
+data.raw["cargo-landing-pad"]["cargo-landing-pad"].graphics_set={
+    animation={
+        layers=helper{chars="l,l,l,◜,━,━,━,◝,\z
+                             l,l,l,┃,H,H,H,┃,\z
+                             l,l,l,┃,H,🚀,H,┃,\z
+                             l,l,l,┃,H,H,H,┃,\z
+                             l,l,l,◟,━,━,━,◞,\z
+                             l,◜,◝,l,l,l,l,l,\z
+                             l,◟,◞,l,l,l,📡,l,\z
+                             l,l,l,l,l,l,l,l,\z",x=8,y=8}
+    },
+    picture=nil,
+    connections=nil
+}
+data.raw["cargo-landing-pad"]["cargo-landing-pad"].robot_animation=nil
+
+for name,table in pairs(data.raw["cargo-landing-pad"]["cargo-landing-pad"].cargo_station_parameters.hatch_definitions) do
+    table.hatch_graphics=nil
+end
+
+for name,table in pairs(data.raw["cargo-landing-pad"]["cargo-landing-pad"].cargo_station_parameters.giga_hatch_definitions) do
+    table.hatch_graphics_back=nil
+    table.hatch_graphics_front=nil
+end
+
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_sprite={layers=helper{chars="🚀,🔥",x=1,y=2,offy=1.25,cres=8,ftint={{r=1,g=1,b=1},{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_shadow_sprite=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].glow_light=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].shadow_slave_entity=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_shadow_overlay_sprite=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_glare_overlay_sprite=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_smoke_bottom1_animation=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_smoke_bottom2_animation=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_smoke_top1_animation=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_smoke_top2_animation=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_smoke_top3_animation=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_flame_animation=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_flame_left_animation=nil
+data.raw["rocket-silo-rocket"]["rocket-silo-rocket"].rocket_flame_right_animation=nil
+
+data.raw["rocket-silo-rocket-shadow"]["rocket-silo-rocket-shadow"].rocket_flame_right_animation=nil
+
+data.raw["combat-robot"]["defender"].shadow_idle=nil
+data.raw["combat-robot"]["defender"].idle={layers=helper{chars="◒,⩚",x=1,y=2,cres=48,ftint={{r=0.5,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["combat-robot"]["defender"].in_motion={layers=helper{chars="◒,⩚",x=1,y=2,cres=48,ftint={{r=0.5,g=1,b=1}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["defender-remnants"].animation={layers=helper{chars="◒",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
+
+
+data.raw["combat-robot"]["distractor"].shadow_idle=nil
+data.raw["combat-robot"]["distractor"].idle={layers=helper{chars="◒,⩚",x=1,y=2,cres=48,ftint={{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["combat-robot"]["distractor"].in_motion={layers=helper{chars="◒,⩚",x=1,y=2,cres=48,ftint={{r=1,g=1,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["distractor-remnants"].animation={layers=helper{chars="◒",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
+
+
+data.raw["combat-robot"]["destroyer"].shadow_idle=nil
+data.raw["combat-robot"]["destroyer"].idle={layers=helper{chars="◒,⩚",x=1,y=2,cres=48,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["combat-robot"]["destroyer"].in_motion={layers=helper{chars="◒,⩚",x=1,y=2,cres=48,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}
+data.raw["corpse"]["destroyer-remnants"].animation={layers=helper{chars="◒",x=1,y=1,ftint={{r=1,g=0.3,b=0.5}}}}
