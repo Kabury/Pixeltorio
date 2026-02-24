@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: 04. 04. 2025
+  Major Features:
+    - Initial release. Includes vulcanus for now.

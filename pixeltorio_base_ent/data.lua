@@ -834,7 +834,7 @@ data.raw["corpse"]["electric-mining-drill-remnants"].animation={layers=helper{ch
 --data.raw["mining-drill"]["electric-mining-drill"].output_fluid_box.pipe_picture=nil
 data.raw["mining-drill"]["electric-mining-drill"].input_fluid_box.pipe_covers=nil
 data.raw["mining-drill"]["electric-mining-drill"].input_fluid_box.pipe_picture=nil
-
+data.raw["mining-drill"]["electric-mining-drill"].integration_patch=nil
 
 
 data.raw["mining-drill"]["pumpjack"].graphics_set={
@@ -2251,7 +2251,7 @@ data.raw["tile"]["water-mud"].tint={r=0.5,g=0.8,b=0.6}
 data.raw["tile"]["water-mud"].effect=nil
 
 dirtcount=1
-dirtcolors={{r=0.025,g=0,b=0},{r=0.025,g=0.025,b=0},{r=0,g=0.025,b=0},{r=0.05,g=0,b=0},{r=0.05,g=0.05,b=0},{r=0,g=0.05,b=0},{r=0.075,g=0.05,b=0},{r=0.075,g=0.05,b=0}}
+dirtcolors={{r=0.05,g=0,b=0},{r=0.05,g=0.05,b=0},{r=0,g=0.05,b=0},{r=0.1,g=0,b=0},{r=0.1,g=0.1,b=0},{r=0,g=0.1,b=0},{r=0.15,g=0.1,b=0},{r=0.15,g=0.1,b=0}}
 for dirtname,dirttable in pairs(data.raw["tile"]) do
     if string.find(dirtname,".*dirt.*") ~= nil then
         dirttable.variants={
@@ -2278,7 +2278,7 @@ end
 
 
 grasscount=1
-grasscolors={{r=0,g=0.075,b=0},{r=0.05,g=0.075,b=0},{r=0,g=0.075,b=0.03},{r=0,g=0.05,b=0}}
+grasscolors={{r=0,g=0.15,b=0},{r=0.1,g=0.15,b=0},{r=0,g=0.15,b=0.06},{r=0,g=0.1,b=0}}
 for grassname,grasstable in pairs(data.raw["tile"]) do
     if string.find(grassname,".*grass.*") ~= nil then
         grasstable.variants={
@@ -2304,7 +2304,7 @@ for grassname,grasstable in pairs(data.raw["tile"]) do
 end
 
 desertcount=1
-desertcolors={{r=0.075,g=0,b=0},{r=0.075,g=0.05,b=0},{r=0.075,g=0,b=0.03},{r=0.075,g=0,b=0}}
+desertcolors={{r=0.15,g=0,b=0},{r=0.15,g=0.1,b=0},{r=0.15,g=0,b=0.06},{r=0.15,g=0,b=0}}
 for desertname,deserttable in pairs(data.raw["tile"]) do
     if string.find(desertname,".*desert.*") ~= nil then
         deserttable.variants={
@@ -2331,7 +2331,7 @@ end
 
 
 sandcount=1
-sandcolors={{r=0.05,g=0.05,b=0},{r=0.05,g=0.035,b=0},{r=0.05,g=0.05,b=0.015},{r=0.035,g=0.05,b=0}}
+sandcolors={{r=0.1,g=0.1,b=0},{r=0.1,g=0.07,b=0},{r=0.1,g=0.1,b=0.03},{r=0.07,g=0.1,b=0}}
 for sandname,sandtable in pairs(data.raw["tile"]) do
     if string.find(sandname,".*sand.*") ~= nil then
         sandtable.variants={
@@ -4024,11 +4024,11 @@ data.raw["character-corpse"]["character-corpse"].armor_picture_mapping=nil
 
 data.raw["cargo-landing-pad"]["cargo-landing-pad"].graphics_set={
     animation={
-        layers=helper{chars="l,l,l,◜,━,━,━,◝,\z
+        layers=helper{chars="l,l,l,┏,━,━,━,┓,\z
                              l,l,l,┃,H,H,H,┃,\z
                              l,l,l,┃,H,🚀,H,┃,\z
                              l,l,l,┃,H,H,H,┃,\z
-                             l,l,l,◟,━,━,━,◞,\z
+                             l,l,l,┗,━,━,━,┛,\z
                              l,◜,◝,l,l,l,l,l,\z
                              l,◟,◞,l,l,l,📡,l,\z
                              l,l,l,l,l,l,l,l,\z",x=8,y=8}
@@ -4037,6 +4037,17 @@ data.raw["cargo-landing-pad"]["cargo-landing-pad"].graphics_set={
     connections=nil
 }
 data.raw["cargo-landing-pad"]["cargo-landing-pad"].robot_animation=nil
+
+data.raw["corpse"]["cargo-landing-pad-remnants"].animation={
+        layers=helper{chars="∅,∅,∅,┏,━,━,━,┓,\z
+                             ∅,∅,∅,┃,H,H,H,┃,\z
+                             ∅,∅,∅,┃,H,🚀,H,┃,\z
+                             ∅,∅,∅,┃,H,H,H,┃,\z
+                             ∅,∅,∅,┗,━,━,━,┛,\z
+                             ∅,◜,◝,∅,∅,∅,∅,∅,\z
+                             ∅,◟,◞,∅,∅,∅,📡,∅,\z
+                             ∅,∅,∅,∅,∅,∅,∅,∅,\z",x=8,y=8,ftint={{r=1,g=0.3,b=0.5}}}} --should improve this later
+
 
 for name,table in pairs(data.raw["cargo-landing-pad"]["cargo-landing-pad"].cargo_station_parameters.hatch_definitions) do
     table.hatch_graphics=nil
