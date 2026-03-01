@@ -754,6 +754,353 @@ data.raw["tile"]["foundation"].effect=nil
 
 
 
+
+
+
+
+
+
+for railname,railtable in pairs(data.raw["elevated-straight-rail"]["elevated-straight-rail"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*back.*") ~= nil) or (string.find(subrailname,".*tie.*") ~= nil) or (string.find(subrailname,".*stone.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                    subrailtable.filenames=nil
+                    if subrailtable.layers then
+                        subrailtable.layers=nil
+                        subrailtable.width=1
+                        subrailtable.height=1
+                    end
+                end
+                if (string.find(subrailname,".*metal.*") ~= nil) then
+                    subrailtable.tint={r=1,g=0.5,b=0.5}
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["elevated-straight-rail"]["elevated-straight-rail"].pictures[railname]=nil
+        end
+    end
+end
+for fencename,fencetable in pairs(data.raw["elevated-straight-rail"]["elevated-straight-rail"].fence_pictures) do
+    if type(fencetable) == "table" then
+        if (string.find(fencename,".*side.*") ~= nil) then 
+            for sidename,sidetable in pairs(fencetable) do 
+                if (string.find(sidename,".*fence.*") ~= nil) then
+                    for fenname,fentable in pairs(sidetable) do 
+                        for dirname,dirtable in pairs(fentable) do 
+                             for sheetame,sheettable in pairs(dirtable) do 
+                                sheettable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                sheettable.x=0
+                                sheettable.y=0
+                            end
+                        end
+                    end
+                end
+                if (string.find(sidename,".*ends.*") ~= nil) then
+                    for subname,subtable in pairs(sidetable) do 
+                        for fenname,fentable in pairs(subtable) do 
+                            for dirname,dirtable in pairs(fentable) do 
+                                for sheetame,sheettable in pairs(dirtable) do 
+                                    sheettable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                    sheettable.x=0
+                                    sheettable.y=0
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["elevated-half-diagonal-rail"]["elevated-half-diagonal-rail"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*back.*") ~= nil) or (string.find(subrailname,".*tie.*") ~= nil) or (string.find(subrailname,".*stone.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                    subrailtable.filenames=nil
+                    if subrailtable.layers then
+                        subrailtable.layers=nil
+                        subrailtable.width=1
+                        subrailtable.height=1
+                    end
+                end
+                if (string.find(subrailname,".*metal.*") ~= nil) then
+                    subrailtable.tint={r=1,g=0.5,b=0.5}
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["elevated-half-diagonal-rail"]["elevated-half-diagonal-rail"].pictures[railname]=nil
+        end
+    end
+end
+for fencename,fencetable in pairs(data.raw["elevated-half-diagonal-rail"]["elevated-half-diagonal-rail"].fence_pictures) do
+    if type(fencetable) == "table" then
+        if (string.find(fencename,".*side.*") ~= nil) then 
+            for sidename,sidetable in pairs(fencetable) do 
+                if (string.find(sidename,".*fence.*") ~= nil) then
+                    for fenname,fentable in pairs(sidetable) do 
+                        for dirname,dirtable in pairs(fentable) do 
+                             for sheetame,sheettable in pairs(dirtable) do
+                                sheettable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                sheettable.x=0
+                                sheettable.y=0
+                            end
+                        end
+                    end
+                end
+                if (string.find(sidename,".*ends.*") ~= nil) then
+                    for subname,subtable in pairs(sidetable) do 
+                        for fenname,fentable in pairs(subtable) do 
+                            for dirname,dirtable in pairs(fentable) do 
+                                for sheetame,sheettable in pairs(dirtable) do 
+                                    sheettable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                    sheettable.x=0
+                                    sheettable.y=0
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["elevated-curved-rail-a"]["elevated-curved-rail-a"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*back.*") ~= nil) or (string.find(subrailname,".*tie.*") ~= nil) or (string.find(subrailname,".*stone.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                    subrailtable.filenames=nil
+                    if subrailtable.layers then
+                        subrailtable.layers=nil
+                        subrailtable.width=1
+                        subrailtable.height=1
+                    end
+                end
+                if (string.find(subrailname,".*metal.*") ~= nil) then
+                    subrailtable.tint={r=1,g=0.5,b=0.5}
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["elevated-curved-rail-a"]["elevated-curved-rail-a"].pictures[railname]=nil
+        end
+    end
+end
+for fencename,fencetable in pairs(data.raw["elevated-curved-rail-a"]["elevated-curved-rail-a"].fence_pictures) do
+    if type(fencetable) == "table" then
+        if (string.find(fencename,".*side.*") ~= nil) then 
+            for sidename,sidetable in pairs(fencetable) do 
+                if (string.find(sidename,".*fence.*") ~= nil) then
+                    for fenname,fentable in pairs(sidetable) do 
+                        for dirname,dirtable in pairs(fentable) do 
+                             for sheetame,sheettable in pairs(dirtable) do 
+                                sheettable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                sheettable.x=0
+                                sheettable.y=0
+                            end
+                        end
+                    end
+                end
+                if (string.find(sidename,".*ends.*") ~= nil) then
+                    for subname,subtable in pairs(sidetable) do 
+                        for fenname,fentable in pairs(subtable) do 
+                            for dirname,dirtable in pairs(fentable) do 
+                                for sheetame,sheettable in pairs(dirtable) do 
+                                    sheettable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                    sheettable.x=0
+                                    sheettable.y=0
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+for railname,railtable in pairs(data.raw["elevated-curved-rail-b"]["elevated-curved-rail-b"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*back.*") ~= nil) or (string.find(subrailname,".*tie.*") ~= nil) or (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*water.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                    subrailtable.filenames=nil
+                    if subrailtable.layers then
+                        subrailtable.layers=nil
+                        subrailtable.width=1
+                        subrailtable.height=1
+                    end
+                end
+                if (string.find(subrailname,".*metal.*") ~= nil) then
+                    subrailtable.tint={r=1,g=0.5,b=0.5}
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["elevated-curved-rail-b"]["elevated-curved-rail-b"].pictures[railname]=nil
+        end
+    end
+end
+for fencename,fencetable in pairs(data.raw["elevated-curved-rail-b"]["elevated-curved-rail-b"].fence_pictures) do
+    if type(fencetable) == "table" then
+        if (string.find(fencename,".*side.*") ~= nil) then 
+            for sidename,sidetable in pairs(fencetable) do 
+                if (string.find(sidename,".*fence.*") ~= nil) then
+                    for fenname,fentable in pairs(sidetable) do 
+                        for dirname,dirtable in pairs(fentable) do 
+                             for sheetame,sheettable in pairs(dirtable) do 
+                                sheettable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                sheettable.x=0
+                                sheettable.y=0
+                            end
+                        end
+                    end
+                end
+                if (string.find(sidename,".*ends.*") ~= nil) then
+                    for subname,subtable in pairs(sidetable) do 
+                        for fenname,fentable in pairs(subtable) do 
+                            for dirname,dirtable in pairs(fentable) do 
+                                for sheetame,sheettable in pairs(dirtable) do 
+                                    sheettable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                    sheettable.x=0
+                                    sheettable.y=0
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+data.raw["rail-support"]["rail-support"].graphics_set={structure={layers=helper{chars="s,s,s,s,s,s,s,s,s",dir=48,ftint={{r=1,g=0.5,b=0.5}},btint={{r=0,g=0,b=0,a=0}}}}}
+
+for railname,railtable in pairs(data.raw["rail-ramp"]["rail-ramp"].pictures) do
+    if type(railtable) == "table" then --make sure its a table
+        for subrailname,subrailtable in pairs(railtable) do
+            if type(subrailtable) == "table" then
+                if (string.find(subrailname,".*stone.*") ~= nil) or (string.find(subrailname,".*shadow.*") ~= nil) or (string.find(subrailname,".*water.*") ~= nil) then 
+                    subrailtable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                    subrailtable.x=0
+                    subrailtable.y=0
+                    subrailtable.filenames=nil
+                    if subrailtable.layers then
+                        subrailtable.layers=nil
+                        subrailtable.width=1
+                        subrailtable.height=1
+                    end
+                end
+                if (string.find(subrailname,".*background.*") ~= nil) then
+                    if (string.find(railname,".*west.*") ~= nil) then
+                        railtable[subrailname]={sheet={layers=helper{chars="r,r,┃,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,r,r,\z
+                                                                            r,≞,┃,≞,≞,≞,≞,┃,≞,≞,≞,≞,≞,≞,≞,r,\z
+                                                                            r,≞,┃,≞,≞,≞,≞,┃,≞,≞,≞,≞,≞,≞,≞,r,\z
+                                                                            r,r,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,r,r",x=16,y=4,ftint={{r=1,g=1,b=0.5}}}}}
+                    end
+                    if (string.find(railname,".*east.*") ~= nil) then
+                        railtable[subrailname]={sheet={layers=helper{chars="r,r,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,┃,r,r,\z
+                                                                            r,≞,≞,≞,≞,≞,≞,≞,┃,≞,≞,≞,≞,┃,≞,r,\z
+                                                                            r,≞,≞,≞,≞,≞,≞,≞,┃,≞,≞,≞,≞,┃,≞,r,\z
+                                                                            r,r,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,≞,r,r",x=16,y=4,ftint={{r=1,g=1,b=0.5}}}}}
+                    end
+                    if (string.find(railname,".*south.*") ~= nil) then
+                        railtable[subrailname]={sheet={layers=helper{chars="r,r,r,r,\z
+                                                                            r,≞,≞,r,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,╱,╲,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,╱,╲,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ╱,≞,≞,╲,\z
+                                                                            r,≞,≞,r,\z
+                                                                            r,r,r,r",x=4,y=16,ftint={{r=1,g=1,b=0.5}}}}}
+                    end
+                    if (string.find(railname,".*north.*") ~= nil) then
+                        railtable[subrailname]={sheet={layers=helper{chars="r,r,r,r,\z
+                                                                            r,╱,╲,r,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ╱,≞,≞,╲,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,╱,╲,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            ≞,≞,≞,≞,\z
+                                                                            r,≞,≞,r,\z
+                                                                            r,r,r,r",x=4,y=16,ftint={{r=1,g=1,b=0.5}}}}}
+                    end
+                end
+                if (string.find(subrailname,".*tie.*") ~= nil) then
+                    railtable[subrailname]=table.deepcopy(data.raw["rail-ramp"]["rail-ramp"].pictures[railname].segment_visualisation_middle)
+                    railtable[subrailname].tint={r=1,g=1,b=0.5}
+                end
+            end  
+        end
+        if string.find(railname,".*endings.*") ~= nil then
+            data.raw["rail-ramp"]["rail-ramp"].pictures[railname]=nil
+        end
+    end
+end
+for fencename,fencetable in pairs(data.raw["rail-ramp"]["rail-ramp"].fence_pictures) do
+    if type(fencetable) == "table" then
+        if (string.find(fencename,".*side.*") ~= nil) then 
+            for sidename,sidetable in pairs(fencetable) do 
+                if (string.find(sidename,".*fence.*") ~= nil) then
+                    for fenname,fentable in pairs(sidetable) do 
+                        if type(fentable) == "table" then
+                            fentable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                            fentable.x=0
+                            fentable.y=0
+                        end
+                    end
+                end
+                if (string.find(sidename,".*ends.*") ~= nil) then
+                    for subname,subtable in pairs(sidetable) do 
+                        for fenname,fentable in pairs(subtable) do 
+                            if type(fentable) == "table" then
+                                fentable.filename='__pixeltorio_base_ent__/graphics/tileset/bigdummy.png'
+                                fentable.x=0
+                                fentable.y=0
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+
 for i,deconame in pairs(data.raw["optimized-decorative"]) do
     deconame.stateless_visualisation=nil
     deconame.stateless_visualisation_variations=nil
@@ -785,3 +1132,8 @@ data.raw["tile"]["space-platform-foundation"].variants={
 }
 data.raw["tile"]["space-platform-foundation"].tint={r=0.3,g=0.3,b=0.3}
 data.raw["tile"]["space-platform-foundation"].effect=nil
+
+
+
+
+
